@@ -1,0 +1,65 @@
+name: Bootstrap Padel Sport V2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "bootstrap/**"
+      - ".github/workflows/bootstrap-v2.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            bootstrap/part.00 \
+            bootstrap/part.01 \
+            bootstrap/part.02 \
+            bootstrap/part.03 \
+            bootstrap/part.04 > /tmp/site.b64
+
+          for file in \
+            bootstrap/tail.00 \
+            bootstrap/tail.00b \
+            bootstrap/tail.01 \
+            bootstrap/tail.02 \
+            bootstrap/tail.06 \
+            bootstrap/tail.07 \
+            bootstrap/tail.08 \
+            bootstrap/tail.09 \
+            bootstrap/tail.10; do
+            tail -n +2 "$file" >> /tmp/site.b64
+          done
+
+          base64 --decode /tmp/site.b64 > /tmp/site.tgz
+          mkdir -p /tmp/padelsport-v2
+          tar -xzf /tmp/site.tgz -C /tmp/padelsport-v2
+
+      - name: Replace staged repository with normal source files
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a /tmp/padelsport-v2/. .
+
+      - name: Commit rebuilt site
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: rebuild site with branding, verified data workflow, and TNI 81 plan"
+          git push origin main
