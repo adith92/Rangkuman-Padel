@@ -9,45 +9,26 @@ function loadHtml(){
  return zlib.gunzipSync(Buffer.from(encoded,'base64')).toString('utf8');
 }
 
-function clean(value=''){
- return String(value).replace(/\\(['"\\])/g,'$1').trim();
-}
-
-function extractVenues(html=''){
- const rows=[];
- const patterns=[
-  /\{[^{}]{0,1200}?name\s*:\s*(['"])(.*?)\1[^{}]{0,1200}?category\s*:\s*(['"])padel\3[^{}]*?\}/gis,
-  /\{[^{}]{0,1200}?category\s*:\s*(['"])padel\1[^{}]{0,1200}?name\s*:\s*(['"])(.*?)\2[^{}]*?\}/gis
- ];
- for(const pattern of patterns){
-  let match;
-  while((match=pattern.exec(html))){
-   const block=match[0];
-   const nameMatch=block.match(/name\s*:\s*(['"])(.*?)\1/is);
-   if(!nameMatch)continue;
-   const cityMatch=block.match(/city\s*:\s*(['"])(.*?)\1/is);
-   const provinceMatch=block.match(/province\s*:\s*(['"])(.*?)\1/is);
-   const addressMatch=block.match(/address\s*:\s*(['"])(.*?)\1/is);
-   rows.push({
-    name:clean(nameMatch[2]),
-    city:clean(cityMatch?.[2]||''),
-    province:clean(provinceMatch?.[2]||''),
-    address:clean(addressMatch?.[2]||'')
-   });
-  }
- }
- const unique=new Map();
- rows.forEach(row=>{if(row.name&&!unique.has(row.name))unique.set(row.name,row)});
- return [...unique.values()];
+function snippet(html,needle){
+ const index=html.indexOf(needle);
+ return {needle,index,text:index>=0?html.slice(Math.max(0,index-350),index+900):''};
 }
 
 module.exports=(req,res)=>{
  try{
-  const venues=extractVenues(loadHtml());
-  res.setHeader('Cache-Control','public, s-maxage=3600, stale-while-revalidate=86400');
-  res.status(200).json({count:venues.length,venues});
+  const html=loadHtml();
+  const probes=[
+   snippet(html,'Green Garden Padel'),
+   snippet(html,'Younkis House & Court'),
+   snippet(html,'NATIONAL_POINTS'),
+   snippet(html,'category:"padel"'),
+   snippet(html,"category:'padel'"),
+   snippet(html,'"category":"padel"')
+  ];
+  res.setHeader('Cache-Control','no-store');
+  res.status(200).json({length:html.length,probes});
  }catch(error){
   console.error('Venue list audit failed',error);
-  res.status(500).json({error:'Daftar venue belum dapat dibaca.'});
+  res.status(500).json({error:'Daftar venue belum dapat dibaca.',detail:error.message});
  }
 };
