@@ -15,8 +15,14 @@ function loadVenues(){
  return rows.filter(x=>x.category==='padel');
 }
 function decode(v=''){return String(v).replace(/\\u003d/gi,'=').replace(/\\u0026/gi,'&').replace(/\\u002f/gi,'/').replace(/\\u0022/gi,'"').replace(/\\u0027/gi,"'").replace(/\\x22/gi,'"').replace(/\\x27/gi,"'").replace(/\\\//g,'/').replace(/&amp;/g,'&')}
-function normPhone(v=''){const d=String(v).replace(/\D/g,'');if(d.startsWith('62'))return d;if(d.startsWith('0'))return `62${d.slice(1)}`;return ''}
-function phoneLabel(v=''){const d=normPhone(v);if(!d)return '';const x=`0${d.slice(2)}`;return x.replace(/(\d{4})(\d{4})(\d+)/,'$1 $2 $3')}
+function normPhone(v=''){
+ const d=String(v).replace(/\D/g,'');
+ const normalized=d.startsWith('62')?d:d.startsWith('0')?`62${d.slice(1)}`:'';
+ if(/^628[1-9]\d{7,10}$/.test(normalized))return normalized;
+ if(/^62(?:2[1-9]|3[1-9]|4[1-9]|5[1-9]|6[1-9]|7[1-9]|9[1-9])\d{6,9}$/.test(normalized))return normalized;
+ return '';
+}
+function phoneLabel(v=''){const d=normPhone(v);if(!d)return '';const x=`0${d.slice(2)}`;return x.length>=11?x.replace(/(\d{4})(\d{4})(\d+)/,'$1 $2 $3'):x}
 async function fetchText(url){
  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),12000);
  try{const r=await fetch(url,{redirect:'follow',signal:controller.signal,headers:{'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/131 Safari/537.36','accept':'text/html,application/xhtml+xml,*/*','accept-language':'id-ID,id;q=0.9,en;q=0.8','cookie':'CONSENT=YES+cb.20220419-08-p0.en+FX+111'}});return {status:r.status,url:r.url,text:decode(await r.text())}}
@@ -30,21 +36,22 @@ function parseResult(html,name){
  const anchors=positions(html,name);
  const phoneRows=[];
  for(const m of html.matchAll(/(?<!\d)(\+?62[\d\s().-]{8,20}|08[1-9][\d\s().-]{6,15})(?!\d)/g)){
-  const phone=normPhone(m[1]);if(phone.length<10||phone.length>15)continue;
+  const phone=normPhone(m[1]);if(!phone)continue;
   phoneRows.push({phone,label:String(m[1]).trim(),pos:m.index,distance:nearest(m.index,anchors)});
  }
  const urlRows=[];
  for(const m of html.matchAll(/https?:\/\/[^\s"'<>\\]+/ig)){
-  const url=cleanUrl(m[0]);const host=hostOf(url);if(!host||/(google|gstatic|googleusercontent|ggpht|youtube)\./i.test(host))continue;
+  const url=cleanUrl(m[0]);const host=hostOf(url);
+  if(!host||/(google|gstatic|googleusercontent|googleapis|ggpht|youtube)\./i.test(host))continue;
   urlRows.push({url,host,pos:m.index,distance:nearest(m.index,anchors)});
  }
  const phones=[...new Map(phoneRows.sort((a,b)=>a.distance-b.distance).map(x=>[x.phone,x])).values()];
  const urls=[...new Map(urlRows.sort((a,b)=>a.distance-b.distance).map(x=>[x.url,x])).values()];
- const phone=phones.find(x=>x.distance<=10500)||null;
- const instagram=urls.find(x=>x.host==='instagram.com'&&x.distance<=9500)||null;
- const whatsapp=urls.find(x=>(x.host==='wa.me'||x.host==='api.whatsapp.com')&&x.distance<=9500)||null;
- const website=urls.find(x=>!['instagram.com','wa.me','api.whatsapp.com','ayo.co.id','link.ayo.co.id'].includes(x.host)&&x.distance<=8500)||null;
- const booking=urls.find(x=>(x.host==='ayo.co.id'||x.host==='link.ayo.co.id'||/playtomic|courtside|reclub|sporta/.test(x.host))&&x.distance<=9500)||null;
+ const phone=phones.find(x=>x.distance<=16000)||null;
+ const instagram=urls.find(x=>x.host==='instagram.com'&&x.distance<=13000)||null;
+ const whatsapp=urls.find(x=>(x.host==='wa.me'||x.host==='api.whatsapp.com')&&x.distance<=13000)||null;
+ const website=urls.find(x=>!['instagram.com','wa.me','api.whatsapp.com','ayo.co.id','link.ayo.co.id'].includes(x.host)&&x.distance<=12000)||null;
+ const booking=urls.find(x=>(x.host==='ayo.co.id'||x.host==='link.ayo.co.id'||/playtomic|courtside|reclub|sporta/.test(x.host))&&x.distance<=13000)||null;
  return {exactMatch:anchors.length>0,phone:phone?.phone||'',phoneLabel:phone?phoneLabel(phone.phone):'',instagram:instagram?.url||'',whatsapp:whatsapp?.url||'',website:website?.url||'',booking:booking?.url||'',debug:{anchors:anchors.slice(0,8),phones:phones.slice(0,5),urls:urls.slice(0,8)}};
 }
 async function auditVenue(v){
