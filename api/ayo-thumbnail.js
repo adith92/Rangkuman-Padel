@@ -72,8 +72,15 @@ function normalizePhone(value=''){
  return '';
 }
 
-function phoneLabel(value=''){
- return String(value).replace(/\s+/g,' ').trim().replace(/[.,;]+$/,'');
+function formatPhone(normalized='',fallback=''){
+ if(!/^628\d{7,12}$/.test(normalized))return String(fallback).replace(/\s+/g,' ').trim().replace(/[.,;]+$/,'');
+ const local=`0${normalized.slice(2)}`;
+ if(local.length<=8)return local;
+ const first=local.slice(0,4);
+ const rest=local.slice(4);
+ if(rest.length<=4)return `${first} ${rest}`;
+ if(rest.length<=7)return `${first} ${rest.slice(0,3)} ${rest.slice(3)}`;
+ return `${first} ${rest.slice(0,4)} ${rest.slice(4)}`;
 }
 
 function phoneScore(context=''){
@@ -101,7 +108,7 @@ function findVenuePhone(html=''){
   if(score<4)continue;
   candidates.push({
    phone:normalized,
-   phoneLabel:phoneLabel(match[1]),
+   phoneLabel:formatPhone(normalized,match[1]),
    contactContext:context.slice(0,240),
    score
   });
@@ -118,13 +125,30 @@ function findEmail(html=''){
  return matches.find(email=>!/@ayo\.co\.id$/i.test(email))||'';
 }
 
+function validInstagramUsername(value='',blocked=new Set()){
+ const username=String(value||'').toLowerCase().replace(/^@/,'');
+ return /^[a-z0-9._]{3,30}$/.test(username)&&!blocked.has(username)?username:'';
+}
+
 function findInstagram(html=''){
  const normalized=decodeHtml(html);
- const blocked=new Set(['ayo.indonesia','instagram','explore','accounts','p','reel','reels','stories']);
- const matches=[...normalized.matchAll(/https?:\/\/(?:www\.)?instagram\.com\/([A-Za-z0-9._]+)/ig)];
- for(const match of matches){
-  const username=String(match[1]||'').toLowerCase();
-  if(username&&!blocked.has(username))return username;
+ const text=plainText(html);
+ const blocked=new Set(['ayo.indonesia','instagram','explore','accounts','profile','official','padel','venue','admin','p','reel','reels','stories']);
+ const urls=[...normalized.matchAll(/https?:\/\/(?:www\.)?instagram\.com\/([A-Za-z0-9._]+)/ig)];
+ for(const match of urls){
+  const username=validInstagramUsername(match[1],blocked);
+  if(username)return username;
+ }
+ const contextual=[
+  /(?:follow\s+(?:our|us)?\s*(?:instagram|insta|ig)|(?:instagram|insta|ig)\s*(?:kami|resmi|official)?|akun\s+instagram)[^@\n]{0,60}@([A-Za-z0-9._]{3,30})/ig,
+  /@([A-Za-z0-9._]{3,30})[^.]{0,50}(?:instagram|insta|\big\b)/ig
+ ];
+ for(const pattern of contextual){
+  let match;
+  while((match=pattern.exec(text))){
+   const username=validInstagramUsername(match[1],blocked);
+   if(username)return username;
+  }
  }
  return '';
 }
