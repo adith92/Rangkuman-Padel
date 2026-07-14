@@ -1,0 +1,61 @@
+(()=>{
+'use strict';
+const checkedAt='14 Juli 2026';
+const maps=(name,city='Indonesia')=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name}, ${city}, Indonesia`)}`;
+const ayo=(slug,total,data={})=>({total,source:'AYO Indonesia',sourceUrl:`https://ayo.co.id/v/${slug}`,confidence:'high',status:'verified',checkedAt,...data});
+const official=(total,sourceUrl,source,evidence)=>({total,source,sourceUrl,confidence:'high',status:'verified',checkedAt,evidence});
+const pending=(name,city,data={})=>({total:null,source:'Kontak bisnis dan Google Maps venue',sourceUrl:maps(name,city),confidence:'none',status:'needs_direct_confirmation',checkedAt,evidence:'Jumlah court belum disebut jelas pada sumber publik yang telah diaudit. Konfirmasi langsung ke pengelola wajib dilakukan.',...data});
+window.VERIFIED_VENUE_COURTS={
+ 'Padel Playy Brawijaya':ayo('padel-playy-brawijaya',3,{evidence:'Booking resmi menampilkan Playy 1, Playy 2, dan Playy 3.'}),
+ 'GOAT Arena / Siliwangi':pending('GOAT Arena Siliwangi','Bandung'),
+ 'Padel Venue':ayo('padel-venue',3,{evidence:'Booking resmi menampilkan Court 1 sampai Court 3 dan deskripsi menyebut 3 court padel.'}),
+ 'Evergreen Padel Club':pending('Evergreen Padel Club','Bandung Barat'),
+ 'Dreamcourt Grafika Sport Arena Padel':ayo('dreamcourt-grafika-sport-arena-padel',1,{evidence:'Deskripsi booking resmi menyebut memiliki 1 court padel.'}),
+ 'Orion Padel Court':ayo('orion-padel-court',2,{evidence:'Booking resmi menampilkan Elevated D dan Elevated E; deskripsi menyebut 2 elevated padel court.'}),
+ 'Trilogi Arena By Duale':ayo('trilogi-arena-by-duale',3,{evidence:'Booking resmi menampilkan Padel 1, Padel 2, dan Padel 3; lapangan tenis dikeluarkan dari perhitungan.'}),
+ 'Wins Arena Kuningan':ayo('wins-arena-kuningan',2,{evidence:'Booking resmi menampilkan Padel A dan Padel B; tiga lapangan tenis dikeluarkan dari perhitungan.'}),
+ 'AIR Padel':ayo('air-padel',3,{evidence:'Booking resmi menampilkan Court 1 sampai Court 3 dan deskripsi menyebut 3 fully air-conditioned padel courts.'}),
+ 'Space Padel ITC Fatmawati':ayo('space-padel-itc-fatmawati',5,{confidence:'medium',status:'reviewed_conflict',evidence:'Deskripsi dan audit booking sebelumnya menunjukkan 5 court. Snapshot produk terbaru hanya menampilkan 3 sehingga angka ditandai perlu review berkala.'}),
+ 'Corner Sport Padel Pondok Pinang':ayo('corner-sport-padel-pondok-pinang',1,{evidence:'Booking resmi hanya menampilkan satu produk lapangan padel aktif.'}),
+ 'Victoria Social Club Kemang':ayo('victoria-social-club-kemang',4,{evidence:'Booking resmi menampilkan 3 regular court dan 1 VIP court.'}),
+ 'Dome Padel Tebet':ayo('dome-padel-tebet',2,{evidence:'Booking resmi menampilkan Court Pink dan Court Blue.'}),
+ 'Wonderball Padel Setiabudi':ayo('wonderball-padel-setiabudi',2,{evidence:'Booking resmi menampilkan Full Panoramic 1 dan Full Panoramic 2.'}),
+ 'Sunrise Padel Permata Hijau':ayo('sunrise-padel-permata-hijau',3,{evidence:'Booking resmi menampilkan Garden Court, Inferno Court, dan Orchid Court.'}),
+ 'Padel Mezcal':ayo('padel-mezcal',5,{evidence:'Booking resmi menampilkan Court 1 sampai Court 5.'}),
+ 'Seven Padel Margasatwa':pending('Seven Padel Margasatwa','Jakarta Selatan'),
+ '1More Point Lebak Bulus':pending('1More Point Lebak Bulus','Jakarta Selatan',{instagram:'1morepoint'}),
+ 'Padel Green Pramuka City':ayo('padel-green-pramuka-city',3,{evidence:'Booking resmi menampilkan Court 1 sampai Court 3.'}),
+ 'I On Padel Cempaka Putih':ayo('i-on-padel-cempaka-putih',3,{evidence:'Booking resmi menampilkan Court 1 sampai Court 3.'}),
+ 'Amalfi Court By VY':ayo('amalfi-court-by-vy',2,{confidence:'medium',status:'partially_verified',evidence:'Deskripsi publik pada halaman booking resmi menyebut 2 court.'}),
+ 'AbsoluteFit Padel':ayo('absolutefit-padel',2,{evidence:'Booking resmi menampilkan Blue Court dan Pink Court; deskripsi menyebut tersedia 2 court.'}),
+ 'The Good Padel Club Alam Sutera':pending('The Good Padel Club Alam Sutera','Tangerang',{website:'https://www.thegoodpadelclub.com/'}),
+ 'Hey Beach Padel':pending('Hey Beach Padel','Tangerang',{instagram:'heybeach.id'}),
+ 'Beyond Padel BSD':pending('Beyond Padel BSD','Tangerang Selatan'),
+ 'Padel Lounge Tangerang':pending('Padel Lounge Tangerang','Tangerang',{website:'https://kyzn.life/'}),
+ 'Aria Racquet Arena':ayo('aria-racquet-arena',1,{evidence:'Booking resmi menampilkan satu Lapangan Padel; dua tennis court dikeluarkan dari perhitungan.'}),
+ 'Padel Villa':ayo('padel-villa',4,{evidence:'Booking resmi menampilkan Court 1 sampai Court 4.'}),
+ 'Fount Padel Club':ayo('fount-padel-club',4,{evidence:'Booking resmi menampilkan Court 1 sampai Court 4.'}),
+ 'Gas Padel Court':ayo('gas-padel-court',4,{evidence:'Booking resmi menampilkan Court 1 sampai Court 4.'}),
+ 'Little Racquet Club':ayo('little-racquet-club',4,{evidence:'Booking resmi menampilkan 4 padel court; tennis court dikeluarkan dari perhitungan.'}),
+ 'Banana Padel Club':ayo('banana-padel-club',6,{confidence:'medium',status:'reviewed_conflict',evidence:'Deskripsi booking menyebut 6 court dan audit awal menampilkan Court 1 sampai Court 6. Snapshot terbaru hanya menampilkan 5 produk.'}),
+ 'Loxus Padel Cibubur':ayo('loxus-padel-cibubur',4,{evidence:'Booking resmi menampilkan Court A sampai Court D.'}),
+ 'Racquet Club Sentul':ayo('racquet-club-sentul',5,{evidence:'Booking resmi menampilkan Court 1 sampai Court 5.'}),
+ 'Homeground Padel Sentul':ayo('homeground-padel-sentul',4,{evidence:'Booking resmi menampilkan Court 1 sampai Court 4.'}),
+ 'Racket Groove':ayo('racket-groove',3,{evidence:'Booking resmi menampilkan Padel 1 sampai Padel 3; pickleball court dikeluarkan dari perhitungan.'}),
+ 'Iodium Padel':ayo('iodium-padel',2,{evidence:'Booking resmi menampilkan Blue Court dan Orange Court.'}),
+ 'Showdown Padel':ayo('showdown',2,{evidence:'Booking resmi menampilkan Showdown 1 dan Showdown 2.'}),
+ 'PadMan Padelground Harapan Indah':ayo('padman-padelground-harapan-indah',4,{evidence:'Booking resmi menampilkan Court 1 sampai Court 4.'}),
+ 'Padel Prive':ayo('padel-prive',4,{evidence:'Booking resmi menampilkan Court 1 sampai Court 4.'}),
+ 'The Good Padel Club Ciumbuleuit':pending('The Good Padel Club Ciumbuleuit','Bandung',{website:'https://www.thegoodpadelclub.com/'}),
+ 'Jungle Padel Surabaya':pending('Jungle Padel Surabaya','Surabaya'),
+ 'Hyde Padel Club':pending('Hyde Padel Club','Surabaya'),
+ 'Jungle Padel Bali':pending('Jungle Padel Pererenan','Bali',{website:'https://www.junglepadel.com/',booking:'https://junglepadel.bookandgo.app/'}),
+ 'Bali Padel Academy':official(7,'https://www.balipadelacademy.com/','Website resmi Bali Padel Academy','Website resmi menyebut seven world-class courts dan 7 premium padel courts.'),
+ 'IndoPadel Bali':official(2,'https://indopadel.com/','Website resmi IndoPadel','Website resmi menampilkan statistik 02 Padel Courts.'),
+ 'Basirih Sports Center':ayo('basirih-sports-center',2,{evidence:'Booking resmi menampilkan Court A dan Court B.'}),
+ 'Ulun Padel 101 Sport Centre':ayo('ulun-padel-101-sport-centre',1,{evidence:'Booking resmi menampilkan satu Lapangan Padel Ulun Sport 101.'}),
+ 'Green Garden Padel':ayo('green-garden-padel',2,{evidence:'Booking resmi menampilkan Court 1 dan Court 2. Angka lain pada halaman merupakan metadata non-court dan tidak dihitung.'}),
+ 'Younkis House & Court':pending('Younkis House & Court','Banjarbaru'),
+ 'Kai Padel':ayo('kai-padel',3,{evidence:'Booking resmi menampilkan #1 Terra, #2 Green HR, dan #3 Terra HR.'})
+};
+})();
