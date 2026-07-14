@@ -69,8 +69,7 @@ function normalizePhone(value=''){
  if(!digits)return '';
  if(digits.startsWith('62'))return digits;
  if(digits.startsWith('0'))return `62${digits.slice(1)}`;
- if(digits.startsWith('8'))return `62${digits}`;
- return digits;
+ return '';
 }
 
 function phoneLabel(value=''){
@@ -89,7 +88,7 @@ function phoneScore(context=''){
 
 function findVenuePhone(html=''){
  const text=searchableText(html);
- const regex=/(\+?62[\d\s().-]{7,20}|0?8[1-9][\d\s().-]{6,17})/g;
+ const regex=/(?<!\d)(\+?62[\d\s().-]{8,20}|08[1-9][\d\s().-]{6,15})(?!\d)/g;
  const candidates=[];
  let match;
  while((match=regex.exec(text))){
@@ -98,11 +97,13 @@ function findVenuePhone(html=''){
   const start=Math.max(0,match.index-130);
   const end=Math.min(text.length,regex.lastIndex+130);
   const context=text.slice(start,end).trim();
+  const score=phoneScore(context);
+  if(score<4)continue;
   candidates.push({
    phone:normalized,
    phoneLabel:phoneLabel(match[1]),
    contactContext:context.slice(0,240),
-   score:phoneScore(context)
+   score
   });
  }
  const unique=[...new Map(candidates.map(item=>[item.phone,item])).values()];
@@ -130,8 +131,9 @@ function findInstagram(html=''){
 
 function findAddress(html=''){
  const text=plainText(html);
- const match=text.match(/Lokasi Venue\s+(.{15,240}?)(?:Fasilitas|Mulai dari|Buka Peta)/i);
- return match?match[1].trim():'';
+ const match=text.match(/Lokasi Venue\s+(.{2,200}?)(?:\s+Buka Peta|\s+Fasilitas|\s+Mulai dari)/i);
+ if(!match)return '';
+ return match[1].replace(/\s+Ada diskon.*$/i,'').trim();
 }
 
 async function fetchVenuePage(slug){
@@ -175,7 +177,7 @@ module.exports=async function handler(req,res){
    return;
   }
   if(String(req.query?.meta||'')==='1'){
-   res.setHeader('Cache-Control','public, s-maxage=1800, stale-while-revalidate=86400');
+   res.setHeader('Cache-Control','public, s-maxage=300, stale-while-revalidate=3600');
    res.status(200).json({
     source:'AYO Indonesia',
     venueUrl:result.venueUrl,
