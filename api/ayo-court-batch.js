@@ -15,47 +15,43 @@ function slugify(value=''){return String(value).normalize('NFD').replace(/[\u030
 function candidateSlugs(name=''){return [...new Set([name,name.replace(/&/g,' '),name.replace(/\band\b/ig,' '),name.replace(/\bpadel\b/ig,' ').trim(),name.replace(/[!]/g,' ')].map(slugify).filter(Boolean))]}
 function decode(value=''){return String(value).replace(/\\\//g,'/').replace(/\\u0026/gi,'&').replace(/\\u003a/gi,':').replace(/\\u0022/gi,'"').replace(/\\x22/gi,'"').replace(/&amp;/g,'&').replace(/&nbsp;/gi,' ').replace(/&quot;/gi,'"').replace(/&#39;/g,"'")}
 function plain(value=''){return decode(value).replace(/<script(?![^>]*application\/ld\+json)[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim()}
+function norm(value=''){return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()}
 function productNames(normalized=''){
  const names=[];
- const patterns=[
-  /["']@type["']\s*:\s*["']Product["'][\s\S]{0,700}?["']name["']\s*:\s*["']([^"']+)["']/gi,
-  /["']name["']\s*:\s*["']([^"']+)["'][\s\S]{0,700}?["']@type["']\s*:\s*["']Product["']/gi
- ];
+ const patterns=[/["']@type["']\s*:\s*["']Product["'][\s\S]{0,700}?["']name["']\s*:\s*["']([^"']+)["']/gi,/["']name["']\s*:\s*["']([^"']+)["'][\s\S]{0,700}?["']@type["']\s*:\s*["']Product["']/gi];
  for(const pattern of patterns){for(const match of normalized.matchAll(pattern)){const name=plain(match[1]);if(name&&name.length<120)names.push(name)}}
  return [...new Set(names.map(name=>name.replace(/\s+/g,' ').trim()))];
 }
-function classifyProducts(names=[]){
+function classifyProducts(names=[],venueName=''){
  const excludedPattern=/\b(tennis|badminton|pickleball|mini\s*soccer|minisoccer|futsal|basket|basketball|squash|golf)\b/i;
- const padel=[];const excluded=[];const ambiguous=[];
+ const venueNorm=norm(venueName);const padel=[];const excluded=[];const ambiguous=[];const venueProducts=[];
  for(const name of names){
+  const nameNorm=norm(name);
+  if(nameNorm===venueNorm||nameNorm===venueNorm.replace(/\b(club|arena|court|sport|sports|centre|center)\b/g,' ').replace(/\s+/g,' ').trim()){venueProducts.push(name);continue}
   if(excludedPattern.test(name)){excluded.push(name);continue}
-  if(/\bpadel\b|\bcourt\b|\blapangan\b|\bfield\b|\bvip\b|\bregular\b|\breguler\b|\bblue\b|\bgreen\b|\bpink\b|\bpurple\b|\bterracotta\b/i.test(name))padel.push(name);
+  const isNumbered=/(?:^|\s)(?:#?\d{1,2}|[a-z])(?:\s|$)/i.test(name)&&/\d|\b[a-z]\b/i.test(name);
+  if(/\bpadel\b|\bcourt\b|\blapangan\b|\bfield\b|\bvip\b|\bregular\b|\breguler\b|\bblue\b|\bgreen\b|\bpink\b|\bpurple\b|\bterracotta\b/i.test(name)||isNumbered)padel.push(name);
   else ambiguous.push(name);
  }
- return {padelProducts:[...new Set(padel)],excludedProducts:[...new Set(excluded)],ambiguousProducts:[...new Set(ambiguous)]};
+ return {padelProducts:[...new Set(padel)],excludedProducts:[...new Set(excluded)],ambiguousProducts:[...new Set(ambiguous)],venueProducts:[...new Set(venueProducts)]};
 }
-function courtInfo(html=''){
+function courtInfo(html='',venueName=''){
  const normalized=decode(html),text=plain(html),evidence=[];
- const products=productNames(normalized);const classified=classifyProducts(products);
+ const products=productNames(normalized);const classified=classifyProducts(products,venueName);
  const productCount=classified.padelProducts.length||null;
  for(const name of classified.padelProducts)evidence.push(`AYO Product: ${name}`);
  const explicit=[];
- const patterns=[
-  /(?:memiliki|tersedia|terdapat|dengan|total)\s*(\d{1,2})\s*(?:buah|unit)?\s*(?:lapangan|court)s?\s*(?:padel)?/gi,
-  /(\d{1,2})\s*(?:buah|unit)?\s*(?:lapangan|court)s?\s*(?:padel)/gi,
-  /(\d{1,2})\s+(?:[a-z-]+\s+){0,3}padel\s*courts?/gi
- ];
+ const patterns=[/(?:memiliki|tersedia|terdapat|dengan|total)\s*(\d{1,2})\s*(?:buah|unit)?\s*(?:lapangan|court)s?\s*(?:padel)?/gi,/(\d{1,2})\s*(?:buah|unit)?\s*(?:lapangan|court)s?\s*(?:padel)/gi,/(\d{1,2})\s+(?:[a-z-]+\s+){0,3}padel\s*courts?/gi];
  for(const pattern of patterns){for(const match of text.matchAll(pattern)){const n=Number(match[1]);if(n>=1&&n<=30){explicit.push(n);evidence.push(text.slice(Math.max(0,match.index-100),Math.min(text.length,match.index+match[0].length+140)))}}}
  const explicitCounts=[...new Set(explicit)];
  const numbered=[];
- for(const name of classified.padelProducts){const match=name.match(/(?:court|lapangan|field)\s*#?\s*(\d{1,2})/i);if(match)numbered.push(Number(match[1]))}
+ for(const name of classified.padelProducts){const match=name.match(/(?:court|lapangan|field|padel|playy)?\s*#?\s*(\d{1,2})(?:\b|\s)/i);if(match)numbered.push(Number(match[1]))}
  const courtNumbers=[...new Set(numbered)].filter(n=>n>=1&&n<=30).sort((a,b)=>a-b);
  let numberedCount=null;if(courtNumbers.length&&courtNumbers[0]===1&&courtNumbers.every((n,i)=>n===i+1))numberedCount=courtNumbers.length;
  let courtTotal=productCount||null;let method=productCount?'ayo_product_count':'none';
  if(!courtTotal&&explicitCounts.length===1){courtTotal=explicitCounts[0];method='explicit_description'}
  if(!courtTotal&&numberedCount){courtTotal=numberedCount;method='numbered_products'}
- const conflicts=[];
- if(productCount&&explicitCounts.length===1&&productCount!==explicitCounts[0])conflicts.push(`Product count ${productCount} vs description ${explicitCounts[0]}`);
+ const conflicts=[];if(productCount&&explicitCounts.length===1&&productCount!==explicitCounts[0])conflicts.push(`Product count ${productCount} vs description ${explicitCounts[0]}`);
  return {courtTotal,method,productCount,numberedCount,explicitCounts,courtNumbers,...classified,evidence:[...new Set(evidence)].slice(0,10),conflicts};
 }
 async function fetchVenue(name){
@@ -67,8 +63,7 @@ async function fetchVenue(name){
    if(!response.ok){attempts.push({slug,status:response.status});continue}
    const html=await response.text();const title=plain((html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[])[1]||'');
    if(!/asset\.ayo\.co\.id\/image\/venue\//i.test(html)&&!/venue|padel|court/i.test(title)){attempts.push({slug,status:response.status,invalid:true});continue}
-   const info=courtInfo(html);
-   const confidence=info.courtTotal&&info.conflicts.length===0&&info.method==='ayo_product_count'?'high':info.courtTotal?'medium':'none';
+   const info=courtInfo(html,name);const confidence=info.courtTotal&&info.conflicts.length===0&&info.method==='ayo_product_count'?'high':info.courtTotal?'medium':'none';
    return {name,found:true,venueUrl,title,confidence,verificationStatus:confidence==='high'?'verified':confidence==='medium'?'partially_verified':'needs_direct_confirmation',...info,attempts:[...attempts,{slug,status:response.status}]};
   }catch(error){attempts.push({slug,error:String(error.message||error)})}
  }
