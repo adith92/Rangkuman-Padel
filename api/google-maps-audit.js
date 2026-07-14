@@ -7,8 +7,10 @@ function loadVenues(){
  const html=zlib.gunzipSync(Buffer.from(encoded,'base64')).toString('utf8');
  const marker='const NATIONAL_POINTS = ';
  const start=html.indexOf(marker);if(start<0)return [];
- const from=start+marker.length;const end=html.indexOf(';',from);if(end<0)return [];
- let raw=html.slice(from,end).trim();raw=raw.replace(/\\"/g,'"').replace(/\\\\/g,'\\');
+ const from=start+marker.length;
+ const close=html.indexOf('];',from);if(close<0)return [];
+ let raw=html.slice(from,close+1).trim();
+ raw=raw.replace(/\\"/g,'"').replace(/\\\\/g,'\\');
  const rows=JSON.parse(raw);
  return rows.filter(x=>x.category==='padel');
 }
@@ -56,8 +58,10 @@ async function auditVenue(v){
  return {name:v.name,city:v.city,province:v.province,address:v.address,mapsUrl,dataStatus:data.status,dataError:data.error||'',...parsed};
 }
 module.exports=async(req,res)=>{
- const all=loadVenues();const offset=Math.max(0,Number(req.query?.offset)||0);const limit=Math.min(5,Math.max(1,Number(req.query?.limit)||5));
- const batch=all.slice(offset,offset+limit);const rows=[];
- for(const venue of batch)rows.push(await auditVenue(venue));
- res.setHeader('Cache-Control','no-store');res.status(200).json({total:all.length,offset,limit,count:rows.length,next:offset+rows.length<all.length?offset+rows.length:null,rows});
+ try{
+  const all=loadVenues();const offset=Math.max(0,Number(req.query?.offset)||0);const limit=Math.min(5,Math.max(1,Number(req.query?.limit)||5));
+  const batch=all.slice(offset,offset+limit);const rows=[];
+  for(const venue of batch)rows.push(await auditVenue(venue));
+  res.setHeader('Cache-Control','no-store');res.status(200).json({total:all.length,offset,limit,count:rows.length,next:offset+rows.length<all.length?offset+rows.length:null,rows});
+ }catch(error){console.error('Google Maps audit failed',error);res.status(500).json({error:String(error.message||error)})}
 };
