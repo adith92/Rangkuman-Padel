@@ -10,15 +10,30 @@ function slugify(value=''){
   .replace(/^-+|-+$/g,'');
 }
 
+function candidateSlugs(name=''){
+ const values=[
+  name,
+  name.replace(/&/g,' '),
+  name.replace(/\band\b/ig,' '),
+  name.replace(/\bpadel\b/ig,' ').trim(),
+  name.replace(/[!]/g,' ')
+ ];
+ return [...new Set(values.map(slugify).filter(Boolean))];
+}
+
 function decodeHtml(value=''){
  return String(value)
   .replace(/\\\//g,'/')
   .replace(/\\u0026/g,'&')
+  .replace(/\\u003a/gi,':')
+  .replace(/\\u0040/gi,'@')
   .replace(/&amp;/g,'&')
   .replace(/&nbsp;/gi,' ')
   .replace(/&#x2F;/gi,'/')
   .replace(/&#47;/g,'/')
-  .replace(/&#58;/g,':');
+  .replace(/&#58;/g,':')
+  .replace(/&quot;/gi,'"')
+  .replace(/&#39;/g,"'");
 }
 
 function plainText(html=''){
@@ -26,6 +41,14 @@ function plainText(html=''){
   .replace(/<script[\s\S]*?<\/script>/gi,' ')
   .replace(/<style[\s\S]*?<\/style>/gi,' ')
   .replace(/<[^>]+>/g,' ')
+  .replace(/\s+/g,' ')
+  .trim();
+}
+
+function searchableText(html=''){
+ return decodeHtml(html)
+  .replace(/<[^>]+>/g,' ')
+  .replace(/[\\"']/g,' ')
   .replace(/\s+/g,' ')
   .trim();
 }
@@ -54,17 +77,55 @@ function phoneLabel(value=''){
  return String(value).replace(/\s+/g,' ').trim().replace(/[.,;]+$/,'');
 }
 
+function phoneScore(context=''){
+ const text=context.toLowerCase();
+ let score=0;
+ if(/admin|pic|manajemen|management/.test(text))score+=8;
+ if(/whats\s*app|wa\b/.test(text))score+=7;
+ if(/hubungi|kontak|telepon|telp|phone/.test(text))score+=5;
+ if(/event|komersial|pertandingan|promosi|reservasi|booking/.test(text))score+=4;
+ return score;
+}
+
 function findVenuePhone(html=''){
- const text=plainText(html);
- const contextual=/(?:admin|whats\s*app|wa|kontak|hubungi|telepon|telp|phone|manajemen|management)[^0-9+]{0,80}(\+?62[\d\s().-]{7,20}|0[\d\s().-]{8,18})/ig;
+ const text=searchableText(html);
+ const regex=/(\+?62[\d\s().-]{7,20}|0?8[1-9][\d\s().-]{6,17})/g;
+ const candidates=[];
  let match;
- while((match=contextual.exec(text))){
+ while((match=regex.exec(text))){
   const normalized=normalizePhone(match[1]);
-  if(normalized.length>=10&&normalized.length<=15){
-   return {phone:normalized,phoneLabel:phoneLabel(match[1]),contactContext:match[0].trim().slice(0,180)};
-  }
+  if(normalized.length<10||normalized.length>15||!/^628/.test(normalized))continue;
+  const start=Math.max(0,match.index-130);
+  const end=Math.min(text.length,regex.lastIndex+130);
+  const context=text.slice(start,end).trim();
+  candidates.push({
+   phone:normalized,
+   phoneLabel:phoneLabel(match[1]),
+   contactContext:context.slice(0,240),
+   score:phoneScore(context)
+  });
  }
- return {phone:'',phoneLabel:'',contactContext:''};
+ const unique=[...new Map(candidates.map(item=>[item.phone,item])).values()];
+ unique.sort((a,b)=>b.score-a.score);
+ const best=unique[0];
+ return best?{phone:best.phone,phoneLabel:best.phoneLabel,contactContext:best.contactContext}:{phone:'',phoneLabel:'',contactContext:''};
+}
+
+function findEmail(html=''){
+ const text=searchableText(html);
+ const matches=[...text.matchAll(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/ig)].map(match=>match[0].toLowerCase());
+ return matches.find(email=>!/@ayo\.co\.id$/i.test(email))||'';
+}
+
+function findInstagram(html=''){
+ const normalized=decodeHtml(html);
+ const blocked=new Set(['ayo.indonesia','instagram','explore','accounts','p','reel','reels','stories']);
+ const matches=[...normalized.matchAll(/https?:\/\/(?:www\.)?instagram\.com\/([A-Za-z0-9._]+)/ig)];
+ for(const match of matches){
+  const username=String(match[1]||'').toLowerCase();
+  if(username&&!blocked.has(username))return username;
+ }
+ return '';
 }
 
 function findAddress(html=''){
@@ -89,18 +150,22 @@ async function fetchVenuePage(slug){
   const parsed=new URL(image);
   if(parsed.hostname!==ASSET_HOST)return null;
  }
- const contact=findVenuePhone(html);
- return {venueUrl,image,address:findAddress(html),...contact};
+ return {
+  venueUrl,
+  image,
+  address:findAddress(html),
+  email:findEmail(html),
+  instagram:findInstagram(html),
+  ...findVenuePhone(html)
+ };
 }
 
 module.exports=async function handler(req,res){
  try{
   const name=String(req.query?.name||'').trim().slice(0,160);
   if(!name){res.status(400).json({error:'Nama venue wajib diisi.'});return}
-  const candidates=[slugify(name)];
-  if(/\bpadel\b/i.test(name))candidates.push(slugify(name.replace(/\bpadel\b/ig,'').trim()));
   let result=null;
-  for(const slug of [...new Set(candidates)].filter(Boolean)){
+  for(const slug of candidateSlugs(name)){
    result=await fetchVenuePage(slug);
    if(result)break;
   }
@@ -110,7 +175,7 @@ module.exports=async function handler(req,res){
    return;
   }
   if(String(req.query?.meta||'')==='1'){
-   res.setHeader('Cache-Control','public, s-maxage=3600, stale-while-revalidate=86400');
+   res.setHeader('Cache-Control','public, s-maxage=1800, stale-while-revalidate=86400');
    res.status(200).json({
     source:'AYO Indonesia',
     venueUrl:result.venueUrl,
@@ -118,6 +183,8 @@ module.exports=async function handler(req,res){
     phone:result.phone,
     phoneLabel:result.phoneLabel,
     contactContext:result.contactContext,
+    email:result.email,
+    instagram:result.instagram,
     address:result.address
    });
    return;
