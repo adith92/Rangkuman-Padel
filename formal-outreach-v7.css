@@ -1,0 +1,6 @@
+/* Formal outreach cleanup */
+.venue-mobile-head,.contact-hero{grid-template-columns:1fr!important}
+#copyFirstMessage,.venue-first-rule,#copySalam,.outreach-rule,.venue-action.copy,.contact-copy-v5{display:none!important}
+.venue-mobile-head>div,.contact-hero>div{max-width:900px}
+.venue-actions-v5{align-items:stretch}
+@media(max-width:760px){.venue-mobile-head,.contact-hero{grid-template-columns:1fr!important}}
