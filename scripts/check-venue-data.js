@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+// Pull-request trigger used to validate the current combined venue dataset.
 const path=require('path');
 process.chdir(path.resolve(__dirname,'..'));
 const handler=require('../api/venue-data-health');
