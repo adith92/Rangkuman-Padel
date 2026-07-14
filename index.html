@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0f4c81">
 <title>Padel Sport Indonesia | Laporan Strategis</title>
-<meta name="description" content="Laporan strategis Turnamen Padel Nasional HUT TNI ke-81, KPI, direktori venue, PBPI, TNI, peta, Rekor MURI, contact person resmi, dan tombol outreach mobile.">
+<meta name="description" content="Laporan strategis Turnamen Padel Nasional HUT TNI ke-81, formulir pendaftaran kategori TNI, Polisi, Umum, Pelajar, Atlet, Komunitas, Kementerian, KPI, direktori venue, PBPI, TNI, peta, Rekor MURI, dan contact person resmi.">
 <style>
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:Inter,system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#0f4c81,#1e40af,#0d9488);color:white;padding:24px}.loader{width:min(460px,100%);text-align:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:24px;padding:30px;backdrop-filter:blur(12px);box-shadow:0 24px 70px rgba(0,0,0,.22)}.ball{font-size:48px;animation:b 1s ease-in-out infinite alternate}@keyframes b{to{transform:translateY(-10px) rotate(12deg)}}h1{font-size:1.45rem;margin:14px 0 6px}p{margin:0;opacity:.88;line-height:1.55}.error{display:none;margin-top:16px;background:#fee2e2;color:#991b1b;border-radius:12px;padding:12px;text-align:left}
 </style>
 </head>
 <body>
-<main class="loader"><div class="ball">🎾</div><h1>Memuat Website Laporan Padel</h1><p id="status">Menyiapkan laporan strategis, foto venue, kontak resmi, dan peta nasional…</p><div class="error" id="error"></div></main>
+<main class="loader"><div class="ball">🎾</div><h1>Memuat Website Laporan Padel</h1><p id="status">Menyiapkan laporan strategis, formulir pendaftaran, foto venue, kontak resmi, dan peta nasional…</p><div class="error" id="error"></div></main>
 <script>
 (async()=>{
  const status=document.getElementById('status'),error=document.getElementById('error');
@@ -19,12 +19,12 @@
   if(!('DecompressionStream' in window)) throw new Error('Gunakan Chrome, Edge, Safari, atau Firefox versi terbaru.');
   const files=[0,1,2,3].map(n=>`bundle/padelsport.gz.b64.${String(n).padStart(2,'0')}`);
   const chunks=await Promise.all(files.map(async file=>{const r=await fetch(file,{cache:'no-store'});if(!r.ok)throw new Error(`Gagal memuat ${file}`);return(await r.text()).trim()}));
-  status.textContent='Membuka data dan memverifikasi kontak venue…';
+  status.textContent='Membuka data, formulir peserta, dan kontak venue…';
   const binary=atob(chunks.join('')),bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
   const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
   let html=await new Response(stream).text();
-  html=html.replace('</head>','<link rel="stylesheet" href="/report-v3.css?v=20260714"><link rel="stylesheet" href="/contact-nav-v4.css?v=20260714b"><link rel="stylesheet" href="/mobile-outreach-v5.css?v=20260714h"><link rel="stylesheet" href="/venue-visual-v6.css?v=20260714d"><link rel="stylesheet" href="/formal-outreach-v7.css?v=20260714e"></head>');
-  html=html.replace('</body>','<script src="/report-v3.js?v=20260714"><\/script><script src="/contact-nav-v4.js?v=20260714b"><\/script><script src="/mobile-outreach-v5.js?v=20260714h"><\/script><script src="/venue-visual-v6.js?v=20260714d"><\/script><script src="/formal-outreach-v7.js?v=20260714e"><\/script><script src="/venue-contacts-verified.js?v=20260714a"><\/script><script src="/venue-contact-v8.js?v=20260714j"><\/script></body>');
+  html=html.replace('</head>','<link rel="stylesheet" href="/report-v3.css?v=20260714"><link rel="stylesheet" href="/contact-nav-v4.css?v=20260714b"><link rel="stylesheet" href="/mobile-outreach-v5.css?v=20260714h"><link rel="stylesheet" href="/venue-visual-v6.css?v=20260714d"><link rel="stylesheet" href="/formal-outreach-v7.css?v=20260714e"><link rel="stylesheet" href="/registration-v9.css?v=20260714a"></head>');
+  html=html.replace('</body>','<script src="/report-v3.js?v=20260714"><\/script><script src="/contact-nav-v4.js?v=20260714b"><\/script><script src="/mobile-outreach-v5.js?v=20260714h"><\/script><script src="/venue-visual-v6.js?v=20260714d"><\/script><script src="/formal-outreach-v7.js?v=20260714e"><\/script><script src="/venue-contacts-verified.js?v=20260714a"><\/script><script src="/venue-contact-v8.js?v=20260714j"><\/script><script src="/registration-v9.js?v=20260714a"><\/script></body>');
   document.open();document.write(html);document.close();
  }catch(err){status.textContent='Situs belum berhasil dimuat.';error.style.display='block';error.textContent=err.message||String(err)}
 })();
