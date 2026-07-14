@@ -204,7 +204,7 @@ function patchCards(){
    card.dataset.contactV9='verified';
    return;
   }
-  if(card.dataset.contactV9==='verified'||card.dataset.contactV9==='loading'||card.dataset.contactV9==='pending')return;
+  if(['verified','loading','pending','queued'].includes(card.dataset.contactV9))return;
   const seeded=VERIFIED_CONTACTS[name];
   if(seeded){applyContact(card,name,seeded);return}
   markPending(card);
