@@ -1,0 +1,34 @@
+name: Venue Data Health
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'venue-court-research-data.js'
+      - 'venue-courts-verified.js'
+      - 'venue-courts-research-merge.js'
+      - 'venue-court-v10.js'
+      - 'venue-court-quality-v12.js'
+      - 'venue-directory-research-v11.js'
+      - 'mobile-redesign-v10.css'
+      - 'venue-quality-v12.css'
+      - 'index.html'
+      - 'api/venue-data-health.js'
+      - 'scripts/check-venue-data.js'
+      - '.github/workflows/venue-data-health.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate venue court data
+        run: node scripts/check-venue-data.js
