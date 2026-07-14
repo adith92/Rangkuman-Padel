@@ -95,6 +95,7 @@ function updateStatus(card,data){
 
 function applyContact(card,name,data){
  if(!data?.phone)return false;
+ if(card.dataset.contactV8==='verified')return true;
  addContactRows(card,data);
  addActions(card,name,data);
  updateAddress(card,data);
@@ -128,6 +129,7 @@ function updateSummary(){
 function patchCards(){
  const cards=[...document.querySelectorAll('.venue-card-v5')];
  cards.forEach((card,index)=>{
+  if(card.dataset.contactV8==='verified'||card.dataset.contactV8==='loading')return;
   const name=card.querySelector('.venue-title-row h3')?.textContent?.trim();
   if(!name)return;
   const seeded=VERIFIED_CONTACTS[name];
