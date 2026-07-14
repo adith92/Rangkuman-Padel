@@ -1,4 +1,4 @@
-function decode(v=''){return String(v).replace(/\\u003d/gi,'=').replace(/\\u0026/gi,'&').replace(/\\u002f/gi,'/').replace(/\\\//g,'/').replace(/&amp;/g,'&')}
+function decode(v=''){return String(v).replace(/\\u003d/gi,'=').replace(/\\u0026/gi,'&').replace(/\\u002f/gi,'/').replace(/\\u0022/gi,'"').replace(/\\u0027/gi,"'").replace(/\\x22/gi,'"').replace(/\\x27/gi,"'").replace(/\\\//g,'/').replace(/&amp;/g,'&')}
 function normPhone(v=''){const d=String(v).replace(/\D/g,'');if(d.startsWith('62'))return d;if(d.startsWith('0'))return `62${d.slice(1)}`;return ''}
 function uniq(a){return [...new Set(a.filter(Boolean))]}
 module.exports=async(req,res)=>{
@@ -12,7 +12,11 @@ module.exports=async(req,res)=>{
   const phones=uniq([...html.matchAll(/(?<!\d)(\+?62[\d\s().-]{8,20}|08[1-9][\d\s().-]{6,15})(?!\d)/g)].map(m=>normPhone(m[1])).filter(x=>x.length>=10&&x.length<=15));
   const websites=uniq([...html.matchAll(/https?:\/\/[^\s"'<>\\]+/ig)].map(m=>m[0]).filter(u=>!/(google|gstatic|googleusercontent|ggpht|youtube)\./i.test(u))).slice(0,20);
   const title=(html.match(/<title>([\s\S]*?)<\/title>/i)?.[1]||'').replace(/<[^>]+>/g,' ').trim();
-  const snippets=[];for(const p of phones.slice(0,5)){const local=p.startsWith('62')?`0${p.slice(2)}`:p;const i=html.indexOf(local);if(i>=0)snippets.push(html.slice(Math.max(0,i-180),i+220))}
-  res.setHeader('Cache-Control','no-store');res.status(200).json({name,city,q,status:r.status,finalUrl:r.url,length:html.length,title,phones,websites,snippets});
+  const snippets=[];for(const p of phones.slice(0,5)){const local=p.startsWith('62')?`0${p.slice(2)}`:p;const i=html.indexOf(local);if(i>=0)snippets.push(html.slice(Math.max(0,i-300),i+500))}
+  const lower=html.toLowerCase();const nameIndex=lower.indexOf(name.toLowerCase());
+  const nameSnippet=nameIndex>=0?html.slice(Math.max(0,nameIndex-1200),nameIndex+5000):'';
+  const cityIndex=lower.indexOf(city.toLowerCase());
+  const citySnippet=cityIndex>=0?html.slice(Math.max(0,cityIndex-500),cityIndex+1500):'';
+  res.setHeader('Cache-Control','no-store');res.status(200).json({name,city,q,status:r.status,finalUrl:r.url,length:html.length,title,phones,websites,snippets,nameIndex,nameSnippet,citySnippet});
  }catch(error){res.status(200).json({name,city,error:String(error.message||error)})}
 };
