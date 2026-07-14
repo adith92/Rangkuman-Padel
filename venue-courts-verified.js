@@ -3,7 +3,7 @@
 const checkedAt='14 Juli 2026';
 const maps=(name,city='Indonesia')=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name}, ${city}, Indonesia`)}`;
 const ayo=(slug,total,data={})=>({total,source:'AYO Indonesia',sourceUrl:`https://ayo.co.id/v/${slug}`,confidence:'high',status:'verified',checkedAt,...data});
-const official=(total,sourceUrl,source,evidence)=>({total,source,sourceUrl,confidence:'high',status:'verified',checkedAt,evidence});
+const official=(total,sourceUrl,source,evidence,data={})=>({total,source,sourceUrl,confidence:'high',status:'verified',checkedAt,evidence,...data});
 const pending=(name,city,data={})=>({total:null,source:'Kontak bisnis dan Google Maps venue',sourceUrl:maps(name,city),confidence:'none',status:'needs_direct_confirmation',checkedAt,evidence:'Jumlah court belum disebut jelas pada sumber publik yang telah diaudit. Konfirmasi langsung ke pengelola wajib dilakukan.',...data});
 window.VERIFIED_VENUE_COURTS={
  'Padel Playy Brawijaya':ayo('padel-playy-brawijaya',3,{evidence:'Booking resmi menampilkan Playy 1, Playy 2, dan Playy 3.'}),
@@ -28,7 +28,7 @@ window.VERIFIED_VENUE_COURTS={
  'I On Padel Cempaka Putih':ayo('i-on-padel-cempaka-putih',3,{evidence:'Booking resmi menampilkan Court 1 sampai Court 3.'}),
  'Amalfi Court By VY':ayo('amalfi-court-by-vy',2,{confidence:'medium',status:'partially_verified',evidence:'Deskripsi publik pada halaman booking resmi menyebut 2 court.'}),
  'AbsoluteFit Padel':ayo('absolutefit-padel',2,{evidence:'Booking resmi menampilkan Blue Court dan Pink Court; deskripsi menyebut tersedia 2 court.'}),
- 'The Good Padel Club Alam Sutera':pending('The Good Padel Club Alam Sutera','Tangerang',{website:'https://www.thegoodpadelclub.com/'}),
+ 'The Good Padel Club Alam Sutera':official(4,'https://www.thegoodpadelclub.com/','Website resmi The Good Padel Club','Seksi resmi cabang Alam Sutera mencantumkan 4 Covered Doubles Courts.',{courtType:'covered',doubleCount:4,singleCount:0}),
  'Hey Beach Padel':pending('Hey Beach Padel','Tangerang',{instagram:'heybeach.id'}),
  'Beyond Padel BSD':pending('Beyond Padel BSD','Tangerang Selatan'),
  'Padel Lounge Tangerang':pending('Padel Lounge Tangerang','Tangerang',{website:'https://kyzn.life/'}),
@@ -46,7 +46,7 @@ window.VERIFIED_VENUE_COURTS={
  'Showdown Padel':ayo('showdown',2,{evidence:'Booking resmi menampilkan Showdown 1 dan Showdown 2.'}),
  'PadMan Padelground Harapan Indah':ayo('padman-padelground-harapan-indah',4,{evidence:'Booking resmi menampilkan Court 1 sampai Court 4.'}),
  'Padel Prive':ayo('padel-prive',4,{evidence:'Booking resmi menampilkan Court 1 sampai Court 4.'}),
- 'The Good Padel Club Ciumbuleuit':pending('The Good Padel Club Ciumbuleuit','Bandung',{website:'https://www.thegoodpadelclub.com/'}),
+ 'The Good Padel Club Ciumbuleuit':official(2,'https://www.thegoodpadelclub.com/','Website resmi The Good Padel Club','Seksi resmi cabang Bandung Ciumbuleuit mencantumkan 2 Canopy Doubles Courts.',{courtType:'canopy',doubleCount:2,singleCount:0}),
  'Jungle Padel Surabaya':pending('Jungle Padel Surabaya','Surabaya'),
  'Hyde Padel Club':pending('Hyde Padel Club','Surabaya'),
  'Jungle Padel Bali':pending('Jungle Padel Pererenan','Bali',{website:'https://www.junglepadel.com/',booking:'https://junglepadel.bookandgo.app/'}),
