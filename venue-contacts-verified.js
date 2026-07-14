@@ -1,0 +1,55 @@
+(()=>{
+'use strict';
+const maps=(name,city='Indonesia')=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name}, ${city}, Indonesia`)}`;
+const gm=(name,city,data={})=>({
+ source:data.source||'Google Maps, listing bisnis venue',
+ sourceUrl:maps(name,city),
+ verifiedAt:'14 Juli 2026',
+ ...data
+});
+window.VERIFIED_VENUE_CONTACTS={
+ 'Padel Playy Brawijaya':gm('Padel Playy Brawijaya','Surabaya',{phone:'6282342820090',phoneLabel:'0823 4282 0090',instagram:'padelplayy'}),
+ 'GOAT Arena / Siliwangi':gm('GOAT Arena Siliwangi','Bandung',{phone:'6281313257520',phoneLabel:'0813 1325 7520'}),
+ 'Padel Venue':gm('Padel Venue','Jakarta Selatan',{phone:'6281318920000',phoneLabel:'0813 1892 0000'}),
+ 'Dreamcourt Grafika Sport Arena Padel':gm('Dreamcourt Grafika Sport Arena Padel','Jakarta Selatan',{phone:'628888540609',phoneLabel:'0888 8540 609',website:'https://heylink.me/dreamcourt.id/',source:'Google Maps dan deskripsi venue AYO'}),
+ 'Orion Padel Court':gm('Orion Padel Court','Jakarta Selatan',{phone:'6285175360908',phoneLabel:'0851 7536 0908',website:'https://linktr.ee/oriontennispadel',booking:'https://link.ayo.co.id/l/5Nxxy9W8qP-Orion-Tennis-Court'}),
+ 'Trilogi Arena By Duale':gm('Trilogi Arena By Duale','Jakarta Selatan',{phone:'6285218886047',phoneLabel:'0852 1888 6047',instagram:'trilogiarena',source:'Google Maps, Instagram resmi, dan deskripsi venue AYO'}),
+ 'Wins Arena Kuningan':gm('Wins Arena Kuningan','Jakarta Selatan',{phone:'6285211801168',phoneLabel:'0852 1180 1168',instagram:'wins.arena'}),
+ 'AIR Padel':gm('AIR Padel','Jakarta Selatan',{phone:'6282311178744',phoneLabel:'0823 1117 8744',booking:'https://ayo.co.id/v/air-padel'}),
+ 'Space Padel ITC Fatmawati':gm('Space Padel ITC Fatmawati','Jakarta Selatan',{phone:'628815644840',phoneLabel:'0881 5644 840'}),
+ 'Corner Sport Padel Pondok Pinang':gm('Corner Sport Padel Pondok Pinang','Jakarta Selatan',{phone:'6285714735571',phoneLabel:'0857 1473 5571'}),
+ 'Victoria Social Club Kemang':gm('Victoria Social Club Kemang','Jakarta Selatan',{phone:'6282261354453',phoneLabel:'0822 6135 4453'}),
+ 'Dome Padel Tebet':gm('Dome Padel Tebet','Jakarta Selatan',{phone:'6285121325704',phoneLabel:'0851 2132 5704',instagram:'dome.padel'}),
+ 'Wonderball Padel Setiabudi':gm('Wonderball Padel Setiabudi','Jakarta Selatan',{phone:'6281110011688',phoneLabel:'0811 1001 1688',source:'Google Maps dan deskripsi venue AYO'}),
+ 'Sunrise Padel Permata Hijau':gm('Sunrise Padel Permata Hijau','Jakarta Selatan',{phone:'628970286688',phoneLabel:'0897 0286 688'}),
+ 'Padel Mezcal':gm('Padel Mezcal','Jakarta Selatan',{phone:'6287766108040',phoneLabel:'0877 6610 8040'}),
+ '1More Point Lebak Bulus':gm('1More Point Lebak Bulus','Jakarta Selatan',{phone:'6281196981171',phoneLabel:'0811 9698 1171',instagram:'1morepoint'}),
+ 'I On Padel Cempaka Putih':gm('I On Padel Cempaka Putih','Jakarta Pusat',{phone:'6285880054880',phoneLabel:'0858 8005 4880'}),
+ 'Amalfi Court By VY':gm('Amalfi Court By VY','Jakarta Pusat',{phone:'6281517884791',phoneLabel:'0815 1788 4791'}),
+ 'AbsoluteFit Padel':gm('AbsoluteFit Padel','Jakarta Pusat',{phone:'6281181205166',phoneLabel:'0811 8120 5166',instagram:'absolutefit2play.kwitangsenen'}),
+ 'The Good Padel Club Alam Sutera':gm('The Good Padel Club Alam Sutera','Tangerang',{phone:'6282118850344',phoneLabel:'0821 1885 0344',website:'https://www.thegoodpadelclub.com/'}),
+ 'Hey Beach Padel':gm('Hey Beach Padel','Tangerang',{phone:'628111189006',phoneLabel:'0811 1189 006',instagram:'heybeach.id'}),
+ 'Beyond Padel BSD':gm('Beyond Padel BSD','Tangerang Selatan',{phone:'6287777721730',phoneLabel:'0877 7772 1730'}),
+ 'Padel Lounge Tangerang':gm('Padel Lounge Tangerang','Tangerang',{phone:'628118601000',phoneLabel:'0811 8601 000',website:'https://kyzn.life/'}),
+ 'Padel Villa':gm('Padel Villa','Tangerang Selatan',{phone:'6281328828816',phoneLabel:'0813 2882 8816'}),
+ 'Little Racquet Club':gm('Little Racquet Club','Bogor',{phone:'6285385390385',phoneLabel:'0853 8539 0385',booking:'https://ayo.co.id/v/little-racquet-club'}),
+ 'Loxus Padel Cibubur':gm('Loxus Padel Cibubur','Bogor',{phone:'6285119893930',phoneLabel:'0851 1989 3930'}),
+ 'Racquet Club Sentul':gm('Racquet Club Sentul','Sentul',{phone:'62816676888',phoneLabel:'0816 676 888'}),
+ 'Homeground Padel Sentul':gm('Homeground Padel Sentul','Sentul',{phone:'6281717178782',phoneLabel:'0817 1717 8782'}),
+ 'Racket Groove':gm('Racket Groove','Bekasi',{phone:'628132125954',phoneLabel:'0813 2125 954',instagram:'racketgroove',source:'Google Maps dan deskripsi venue AYO'}),
+ 'Iodium Padel':gm('Iodium Padel','Bekasi',{phone:'6289674030858',phoneLabel:'0896 7403 0858'}),
+ 'Showdown Padel':gm('Showdown Padel','Bekasi',{phone:'6281805991168',phoneLabel:'0818 0599 1168',booking:'https://link.ayo.co.id/l/Tv27Cf6e1E-Showdown'}),
+ 'PadMan Padelground Harapan Indah':gm('PadMan Padelground Harapan Indah','Bekasi',{phone:'628133333589',phoneLabel:'0813 3333 589'}),
+ 'Padel Prive':gm('Padel Prive','Bekasi',{booking:'https://link.ayo.co.id/l/ApEW78FZtG-Padel-Prive',source:'Google Maps dan kanal booking venue'}),
+ 'The Good Padel Club Ciumbuleuit':gm('The Good Padel Club Ciumbuleuit','Bandung',{phone:'6285169675848',phoneLabel:'0851 6967 5848',website:'https://www.thegoodpadelclub.com/'}),
+ 'Jungle Padel Surabaya':gm('Jungle Padel Surabaya','Surabaya',{phone:'6282114243436',phoneLabel:'0821 1424 3436'}),
+ 'Jungle Padel Bali':gm('Jungle Padel Pererenan','Bali',{phone:'6281236664126',phoneLabel:'0812 3666 4126 (Pererenan)',whatsapp:'https://wa.me/6281236664126',website:'https://www.junglepadel.com/',booking:'https://junglepadel.bookandgo.app/',source:'Google Maps dan kanal resmi Jungle Padel Pererenan',contactNote:'Nama direktori bersifat grup Bali; kontak yang ditampilkan adalah cabang Pererenan.'}),
+ 'Bali Padel Academy':gm('Bali Padel Academy','Bali',{phone:'6281717107000',phoneLabel:'0817 1710 7000',website:'http://www.balipadelacademy.com/'}),
+ 'IndoPadel Bali':gm('IndoPadel Bali','Bali',{phone:'6282340038633',phoneLabel:'0823 4003 8633',whatsapp:'https://wa.me/6282340038633',website:'https://indopadel.com/'}),
+ 'Basirih Sports Center':gm('Basirih Sport Center','Banjarmasin',{phone:'6285175333838',phoneLabel:'0851 7533 3838',secondaryPhone:'6281347201232',secondaryPhoneLabel:'0813 4720 1232 (VIP & Cafe)',instagram:'basirihsportcenter',source:'Google Maps, profil bisnis dan deskripsi pemilik'}),
+ 'Ulun Padel 101 Sport Centre':gm('Ulun Padel 101 Sport Centre','Banjarmasin',{booking:'https://ayo.co.id/v/ulun-padel-101-sport-centre',source:'Google Maps dan kanal booking venue'}),
+ 'Green Garden Padel':gm('Green Garden Padel','Banjarmasin',{phone:'6281150012010',phoneLabel:'0811 5001 2010',booking:'https://ayo.co.id/v/green-garden-padel'}),
+ 'Younkis House & Court':gm('Younkis House & Court','Banjarbaru',{phone:'6282252704626',phoneLabel:'0822 5270 4626'}),
+ 'Kai Padel':gm('Kai Padel','Manado',{phone:'6281148508787',phoneLabel:'0811 4850 8787'})
+};
+})();
