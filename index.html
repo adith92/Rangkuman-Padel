@@ -11,7 +11,7 @@
 </style>
 </head>
 <body>
-<main class="loader"><div class="ball">🎾</div><h1>Memuat Website Laporan Padel</h1><p id="status">Menyiapkan laporan strategis, kontak resmi, direktori venue mobile, dan peta nasional…</p><div class="error" id="error"></div></main>
+<main class="loader"><div class="ball">🎾</div><h1>Memuat Website Laporan Padel</h1><p id="status">Menyiapkan laporan strategis, foto venue, kontak resmi, dan peta nasional…</p><div class="error" id="error"></div></main>
 <script>
 (async()=>{
  const status=document.getElementById('status'),error=document.getElementById('error');
@@ -19,12 +19,12 @@
   if(!('DecompressionStream' in window)) throw new Error('Gunakan Chrome, Edge, Safari, atau Firefox versi terbaru.');
   const files=[0,1,2,3].map(n=>`bundle/padelsport.gz.b64.${String(n).padStart(2,'0')}`);
   const chunks=await Promise.all(files.map(async file=>{const r=await fetch(file,{cache:'no-store'});if(!r.ok)throw new Error(`Gagal memuat ${file}`);return(await r.text()).trim()}));
-  status.textContent='Membuka data dan memasang modul outreach mobile…';
+  status.textContent='Membuka data dan memasang thumbnail venue asli…';
   const binary=atob(chunks.join('')),bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
   const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
   let html=await new Response(stream).text();
-  html=html.replace('</head>','<link rel="stylesheet" href="/report-v3.css?v=20260714"><link rel="stylesheet" href="/contact-nav-v4.css?v=20260714b"><link rel="stylesheet" href="/mobile-outreach-v5.css?v=20260714c"></head>');
-  html=html.replace('</body>','<script src="/report-v3.js?v=20260714"><\/script><script src="/contact-nav-v4.js?v=20260714b"><\/script><script src="/mobile-outreach-v5.js?v=20260714c"><\/script></body>');
+  html=html.replace('</head>','<link rel="stylesheet" href="/report-v3.css?v=20260714"><link rel="stylesheet" href="/contact-nav-v4.css?v=20260714b"><link rel="stylesheet" href="/mobile-outreach-v5.css?v=20260714c"><link rel="stylesheet" href="/venue-visual-v6.css?v=20260714d"></head>');
+  html=html.replace('</body>','<script src="/report-v3.js?v=20260714"><\/script><script src="/contact-nav-v4.js?v=20260714b"><\/script><script src="/mobile-outreach-v5.js?v=20260714c"><\/script><script src="/venue-visual-v6.js?v=20260714d"><\/script></body>');
   document.open();document.write(html);document.close();
  }catch(err){status.textContent='Situs belum berhasil dimuat.';error.style.display='block';error.textContent=err.message||String(err)}
 })();
