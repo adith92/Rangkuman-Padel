@@ -1,0 +1,25 @@
+/* Venue research v11: Jabodetabek court dataset, conflicts, and outreach */
+.venue-research-summary-v11{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:0 0 12px;padding:12px;border:1px solid #bfdbfe;border-radius:18px;background:linear-gradient(135deg,#eff6ff,#f8fafc);box-shadow:0 10px 28px rgba(15,76,129,.08)}
+.venue-research-summary-v11>div{display:grid;gap:4px;min-width:0;padding:10px 11px;border:1px solid #dbeafe;border-radius:13px;background:rgba(255,255,255,.88)}
+.venue-research-summary-v11 span{font-size:.58rem;font-weight:800;color:#64748b}.venue-research-summary-v11 b{font-size:1.02rem;color:#0f4c81}
+.venue-research-summary-v11>p{grid-column:1/-1;margin:0;padding:8px 10px;border-radius:11px;background:#fff7ed;color:#9a3412;font-size:.61rem;line-height:1.45}
+.venue-research-v11{border:1px solid #cbd5e1;border-radius:14px;background:#fff;overflow:hidden}
+.venue-research-v11>summary{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 11px;list-style:none;cursor:pointer;background:linear-gradient(135deg,#f8fafc,#eff6ff);color:#334155;font-size:.62rem;font-weight:900}
+.venue-research-v11>summary::-webkit-details-marker{display:none}.venue-research-v11[open]>summary b{transform:rotate(180deg)}.venue-research-v11>summary b{transition:transform .18s ease}
+.venue-research-body-v11{display:grid;gap:9px;padding:10px 11px;border-top:1px solid #e2e8f0}
+.venue-research-grid-v11{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.venue-research-grid-v11>div{display:grid;gap:3px;padding:8px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc}
+.venue-research-grid-v11 span{font-size:.5rem;font-weight:800;color:#64748b}.venue-research-grid-v11 strong{font-size:.62rem;color:#0f172a}
+.venue-research-body-v11>p{margin:0;font-size:.59rem;line-height:1.5;color:#475569}
+.venue-research-sources-v11{display:grid;gap:7px;padding:9px;border:1px solid #dbeafe;border-radius:11px;background:#f8fbff}
+.venue-research-sources-v11>b{font-size:.6rem;color:#1e3a8a}.venue-research-sources-v11>div{display:grid;gap:2px}.venue-research-sources-v11 a,.venue-research-sources-v11 span{font-size:.58rem;font-weight:850;color:#1d4ed8;text-decoration:none}.venue-research-sources-v11 small{font-size:.52rem;line-height:1.4;color:#64748b}
+.venue-research-warning-v11,.venue-research-outreach-v11{display:grid;gap:5px;padding:9px;border-radius:11px}
+.venue-research-warning-v11{border:1px solid #fecaca;background:#fff1f2;color:#9f1239}.venue-research-outreach-v11{border:1px solid #fde68a;background:#fffbeb;color:#92400e}
+.venue-research-warning-v11>b,.venue-research-outreach-v11>b{font-size:.61rem}.venue-research-warning-v11 p,.venue-research-outreach-v11 p{margin:0;font-size:.57rem;line-height:1.45}.venue-research-outreach-v11 small{font-size:.52rem;line-height:1.4}
+@media(max-width:760px){
+ .venue-research-summary-v11{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:9px;margin-bottom:9px;border-radius:15px}
+ .venue-research-summary-v11>div{padding:8px}.venue-research-summary-v11 b{font-size:.88rem}.venue-research-summary-v11>p{font-size:.56rem}
+ .venue-research-v11>summary{font-size:.57rem}.venue-research-body-v11{padding:9px}.venue-research-grid-v11 strong{font-size:.58rem}
+}
+@media(max-width:390px){.venue-research-grid-v11{grid-template-columns:1fr}}
+@media print{.venue-research-v11{break-inside:avoid}.venue-research-v11>summary{display:none}.venue-research-v11>.venue-research-body-v11{display:grid!important}.venue-research-summary-v11{box-shadow:none}}
