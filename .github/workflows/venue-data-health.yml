@@ -16,6 +16,21 @@ on:
       - 'api/venue-data-health.js'
       - 'scripts/check-venue-data.js'
       - '.github/workflows/venue-data-health.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'venue-court-research-data.js'
+      - 'venue-courts-verified.js'
+      - 'venue-courts-research-merge.js'
+      - 'venue-court-v10.js'
+      - 'venue-court-quality-v12.js'
+      - 'venue-directory-research-v11.js'
+      - 'mobile-redesign-v10.css'
+      - 'venue-quality-v12.css'
+      - 'index.html'
+      - 'api/venue-data-health.js'
+      - 'scripts/check-venue-data.js'
+      - '.github/workflows/venue-data-health.yml'
   workflow_dispatch:
 
 permissions:
