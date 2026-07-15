@@ -2,9 +2,9 @@
 'use strict';
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const NAV_ITEMS=[
- {id:'report',icon:'📊',label:'Laporan'}, {id:'kontak',icon:'🤝',label:'Kontak'},
- {id:'lapangan',icon:'🏟️',label:'Venue'}, {id:'peta',icon:'🗺️',label:'Peta'},
- {id:'pengprov',icon:'🏛️',label:'PBPI'}, {id:'merk',icon:'💼',label:'Mitra'},
+ {id:'report',icon:'📊',label:'Laporan'},{id:'kontak',icon:'🤝',label:'Kontak'},
+ {id:'lapangan',icon:'🏟️',label:'Venue'},{id:'peta',icon:'🗺️',label:'Peta'},
+ {id:'pengprov',icon:'🏛️',label:'PBPI'},{id:'merk',icon:'💼',label:'Mitra'},
  {id:'muri',icon:'🏅',label:'MURI'}
 ];
 const CONTACTS=[
@@ -15,20 +15,27 @@ const CONTACTS=[
  {name:'PPSI',full:'Indonesia Padel Association',icon:'🌱',status:'Kontak resmi',statusClass:'verified',purpose:'Komunitas, grassroots, akademi, event, dan pengembangan ekosistem padel.',address:'Jakarta, Indonesia',phone:'',phoneLabel:'',whatsapp:'',whatsappLabel:'',email:'info@padelindonesia.org',website:'https://padelindonesia.org/',instagram:'',maps:'https://www.google.com/maps/search/?api=1&query=Indonesia+Padel+Association+PPSI+Jakarta',source:'Situs resmi PPSI',updated:'14 Juli 2026'},
  {name:'IPON',full:'Indonesian Padel Owners Network',icon:'🔗',status:'Perlu verifikasi ulang',statusClass:'pending',purpose:'Jalur jaringan pemilik dan pengelola lapangan padel Indonesia.',address:'Kontak direktori lama. Konfirmasi identitas dan kapasitas CP sebelum mengirim materi event.',phone:'628170078780',phoneLabel:'+62 817-0078-780',whatsapp:'628170078780',whatsappLabel:'+62 817-0078-780',email:'wisnu@ptcss.id',website:'',instagram:'https://instagram.com/wisnusanjaya',maps:'',source:'Direktori master sebelumnya, belum ditemukan kanal resmi IPON',updated:'Perlu konfirmasi'}
 ];
-function actions(c){return [
- c.whatsapp&&`<a class="contact-action wa" href="https://wa.me/${c.whatsapp}" target="_blank" rel="noopener"><span>💬</span><b>WhatsApp</b></a>`,
- c.phone&&`<a class="contact-action phone" href="tel:+${c.phone}" aria-label="Telepon ${esc(c.name)}"><span>📞</span><b>Telepon</b></a>`,
- c.email&&`<a class="contact-action email" href="mailto:${esc(c.email)}"><span>✉️</span><b>Email</b></a>`,
- c.website&&`<a class="contact-action web" href="${c.website}" target="_blank" rel="noopener"><span>🌐</span><b>Website</b></a>`,
- c.instagram&&`<a class="contact-action ig" href="${c.instagram}" target="_blank" rel="noopener"><span>📸</span><b>Instagram</b></a>`,
- c.maps&&`<a class="contact-action maps" href="${c.maps}" target="_blank" rel="noopener"><span>📍</span><b>Maps</b></a>`
- ].filter(Boolean).join('')}
+function actions(c){return[c.whatsapp&&`<a class="contact-action wa" href="https://wa.me/${c.whatsapp}" target="_blank" rel="noopener"><span>💬</span><b>WhatsApp</b></a>`,c.phone&&`<a class="contact-action phone" href="tel:+${c.phone}" aria-label="Telepon ${esc(c.name)}"><span>📞</span><b>Telepon</b></a>`,c.email&&`<a class="contact-action email" href="mailto:${esc(c.email)}"><span>✉️</span><b>Email</b></a>`,c.website&&`<a class="contact-action web" href="${c.website}" target="_blank" rel="noopener"><span>🌐</span><b>Website</b></a>`,c.instagram&&`<a class="contact-action ig" href="${c.instagram}" target="_blank" rel="noopener"><span>📸</span><b>Instagram</b></a>`,c.maps&&`<a class="contact-action maps" href="${c.maps}" target="_blank" rel="noopener"><span>📍</span><b>Maps</b></a>`].filter(Boolean).join('')}
 function shell(){return `<div class="contact-hero"><div><span class="report-kicker">OUTREACH HUB • DATA PUBLIK RESMI</span><h2>Contact Person & Jalur Pendekatan</h2><p>MURI, PBPI, KONI, KOI/NOC, PPSI, dan jaringan pemilik lapangan dalam satu halaman tindakan.</p></div><button type="button" class="copy-salam" id="copySalam"><span>📋</span><b>Salin “Assalamualaikum”</b></button></div><div class="outreach-rule"><span>1</span><div><strong>Pesan pertama cukup “Assalamualaikum”.</strong><p>Setelah dibalas, baru tanyakan nama, jabatan, dan bagian yang menangani event atau kerja sama. Jangan kirim proposal panjang pada kontak pertama.</p></div></div><div class="contact-filters"><input id="contactSearch" type="search" placeholder="Cari MURI, PBPI, KONI, KOI, asosiasi..."><button type="button" id="verifiedOnly" aria-pressed="false"><span>✅</span> Hanya resmi</button></div><div class="contact-grid" id="contactGrid"></div><div class="source-note"><strong>Pembaruan 14 Juli 2026:</strong> MURI, PBPI, KONI, KOI/NOC, dan PPSI berasal dari kanal resmi organisasi. IPON masih diberi label perlu verifikasi ulang.</div>`}
 function render(){const grid=document.getElementById('contactGrid');if(!grid)return;const q=(document.getElementById('contactSearch')?.value||'').toLowerCase().trim(),only=document.getElementById('verifiedOnly')?.getAttribute('aria-pressed')==='true';const rows=CONTACTS.filter(c=>{const hay=[c.name,c.full,c.purpose,c.address,c.email,c.phoneLabel,c.whatsappLabel].join(' ').toLowerCase();return(!q||hay.includes(q))&&(!only||c.statusClass==='verified')});grid.innerHTML=rows.map(c=>`<article class="contact-card ${c.statusClass}"><div class="contact-card-head"><div class="contact-logo">${c.icon}</div><div><div class="contact-name-row"><h3>${esc(c.name)}</h3><span class="contact-status ${c.statusClass}">${esc(c.status)}</span></div><p>${esc(c.full)}</p></div></div><p class="contact-purpose">${esc(c.purpose)}</p><div class="contact-details">${c.whatsappLabel?`<div><span>WhatsApp</span><strong>${esc(c.whatsappLabel)}</strong></div>`:''}${c.phoneLabel?`<div><span>Telepon</span><strong>${esc(c.phoneLabel)}</strong></div>`:''}${c.email?`<div><span>Email</span><strong>${esc(c.email)}</strong></div>`:''}<div><span>Alamat / Jalur</span><strong>${esc(c.address)}</strong></div></div><div class="contact-actions">${actions(c)}</div><div class="contact-source"><span>🛡️ ${esc(c.source)}</span><span>${esc(c.updated)}</span></div></article>`).join('')||'<div class="note">Kontak tidak ditemukan.</div>'}
 function bootContacts(){const search=document.getElementById('contactSearch'),toggle=document.getElementById('verifiedOnly'),copy=document.getElementById('copySalam');if(!search||search.dataset.ready)return;search.dataset.ready='1';search.addEventListener('input',render);toggle?.addEventListener('click',()=>{const next=toggle.getAttribute('aria-pressed')!=='true';toggle.setAttribute('aria-pressed',String(next));toggle.classList.toggle('active',next);render()});copy?.addEventListener('click',async()=>{try{await navigator.clipboard.writeText('Assalamualaikum');copy.innerHTML='<span>✅</span><b>Sudah disalin</b>';setTimeout(()=>copy.innerHTML='<span>📋</span><b>Salin “Assalamualaikum”</b>',1800)}catch(e){prompt('Salin pesan ini:','Assalamualaikum')}});render()}
 function button(x,active=false){return `<button type="button" class="nav-tab${active?' active':''}" data-tab="${x.id}" aria-label="Buka ${x.label}"><span class="nav-ico">${x.icon}</span><span class="nav-label">${x.label}</span></button>`}
 function bottomButton(x,active=false){return `<button type="button"${active?' class="active"':''} data-tab="${x.id}" aria-label="Buka ${x.label}"><span class="nav-ico">${x.icon}</span><span class="nav-label">${x.label}</span></button>`}
-function go(id){document.querySelectorAll('.nav-tab,.bottom-nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));document.querySelectorAll('.section').forEach(x=>x.classList.toggle('active',x.id===id));if(id==='peta')setTimeout(()=>{if(typeof bootNationalMap==='function')bootNationalMap();if(typeof nationalMap!=='undefined'&&nationalMap)nationalMap.invalidateSize()},80);if(id==='kontak')setTimeout(bootContacts,10);window.scrollTo({top:0,behavior:'smooth'})}
-function install(){const contact=document.getElementById('kontak');if(contact)contact.innerHTML=shell();const nav=document.getElementById('navTabs');if(nav)nav.innerHTML=NAV_ITEMS.map((x,i)=>button(x,i===0)).join('');const bottom=document.querySelector('.bottom-nav');if(bottom)bottom.innerHTML=NAV_ITEMS.map((x,i)=>bottomButton(x,i===0)).join('');document.querySelectorAll('.nav-tab,.bottom-nav button').forEach(x=>x.addEventListener('click',()=>go(x.dataset.tab)));const badge=document.querySelector('.header .badge');if(badge)badge.textContent='Live Website • Update 14 Juli 2026 • Mobile Friendly';bootContacts()}
+let activeTab='report';let navFrame=0;let mapBooted=false;
+function defer(task,timeout=250){if('requestIdleCallback'in window)requestIdleCallback(task,{timeout});else setTimeout(task,32)}
+function go(id){
+ if(!id||id===activeTab)return;
+ cancelAnimationFrame(navFrame);
+ navFrame=requestAnimationFrame(()=>{
+  activeTab=id;
+  document.querySelectorAll('.nav-tab,.bottom-nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
+  document.querySelectorAll('.section').forEach(x=>{const active=x.id===id;x.classList.toggle('active',active);x.setAttribute('aria-hidden',active?'false':'true')});
+  window.scrollTo(0,0);
+  window.dispatchEvent(new CustomEvent('app-tab-change',{detail:{id}}));
+  if(id==='kontak')defer(bootContacts,100);
+  if(id==='peta')defer(()=>{if(!mapBooted&&typeof bootNationalMap==='function'){bootNationalMap();mapBooted=true}if(typeof nationalMap!=='undefined'&&nationalMap)nationalMap.invalidateSize()},400);
+ });
+}
+function install(){const contact=document.getElementById('kontak');if(contact)contact.innerHTML=shell();const nav=document.getElementById('navTabs');if(nav)nav.innerHTML=NAV_ITEMS.map((x,i)=>button(x,i===0)).join('');const bottom=document.querySelector('.bottom-nav');if(bottom)bottom.innerHTML=NAV_ITEMS.map((x,i)=>bottomButton(x,i===0)).join('');document.querySelectorAll('.nav-tab,.bottom-nav button').forEach(x=>x.addEventListener('click',()=>go(x.dataset.tab)));document.querySelectorAll('.section').forEach(x=>x.setAttribute('aria-hidden',x.id==='report'?'false':'true'));const badge=document.querySelector('.header .badge');if(badge)badge.textContent='Live Website • Update 14 Juli 2026 • Mobile Friendly';bootContacts();window.goPadelTab=go}
 try{install()}catch(err){console.error('Contact/nav v4 failed:',err)}
 })();
