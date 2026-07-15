@@ -1,0 +1,15 @@
+/* Mobile performance hotfix v13 */
+.section:not(.active){display:none!important}
+.section.active{display:block;contain:layout style}
+.venue-card-v5{content-visibility:auto;contain-intrinsic-size:480px}
+.venue-load-more-v13{display:flex;justify-content:center;padding:14px 0 6px}
+.venue-load-more-v13[hidden]{display:none!important}
+.venue-load-more-v13 button{min-height:46px;padding:10px 18px;border:1px solid #bfdbfe;border-radius:999px;background:#eff6ff;color:#1d4ed8;font:800 .75rem/1 Inter,system-ui,sans-serif;cursor:pointer}
+@media(max-width:760px){
+ .bottom-nav,.venue-toolbar-v5{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:#fff!important}
+ .venue-card-v5,.contact-card,.report-card{animation:none!important;transition:none!important}
+ .venue-grid-v5{contain:layout style}
+ .venue-load-more-v13{position:relative;z-index:2;padding:10px 0 18px}
+ .venue-load-more-v13 button{width:min(100%,320px);font-size:.72rem}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
