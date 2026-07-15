@@ -3,16 +3,7 @@
   "trailingSlash": false,
   "functions": {
     "api/venue-data-health.js": {
-      "includeFiles": [
-        "bundle/**",
-        "venue-court-research-data.js",
-        "venue-courts-verified.js",
-        "venue-courts-research-merge.js",
-        "venue-court-v10.js",
-        "venue-court-quality-v12.js",
-        "mobile-redesign-v10.css",
-        "index.html"
-      ]
+      "includeFiles": "{bundle/**,venue-court-research-data.js,venue-courts-verified.js,venue-courts-research-merge.js,venue-court-v10.js,venue-court-quality-v12.js,mobile-redesign-v10.css,index.html}"
     }
   },
   "headers": [{
