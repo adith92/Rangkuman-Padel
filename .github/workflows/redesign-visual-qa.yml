@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - redesign/executive-command-center-v15
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'index.html'
+      - 'legacy.html'
+      - 'redesign-v15-*.css'
+      - 'redesign-v15.js'
+      - 'qa/redesign-visual-qa.mjs'
+      - '.github/workflows/redesign-visual-qa.yml'
   workflow_dispatch:
 
 jobs:
