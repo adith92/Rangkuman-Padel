@@ -29,13 +29,16 @@ await check('legacy-route', (await desktop.request.get('http://127.0.0.1:4173/le
 const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, isMobile: true });
 await mobile.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
 await check('mobile-no-horizontal-overflow', await mobile.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), 'document width must fit viewport');
+await mobile.screenshot({ path: `${output}/mobile-first-viewport.png`, fullPage: false });
 await mobile.locator('[data-menu-toggle]').click();
+await mobile.waitForTimeout(300);
 await check('mobile-menu-opens', await mobile.locator('[data-nav]').evaluate((el) => el.classList.contains('open')), 'mobile navigation did not open');
 await mobile.screenshot({ path: `${output}/mobile-menu.png`, fullPage: false });
 await mobile.locator('[data-menu-toggle]').click();
-await mobile.screenshot({ path: `${output}/mobile-first-viewport.png`, fullPage: false });
+await mobile.waitForTimeout(300);
+await check('mobile-menu-closes', !(await mobile.locator('[data-nav]').evaluate((el) => el.classList.contains('open'))), 'mobile navigation did not close');
 await mobile.screenshot({ path: `${output}/mobile-full-page.png`, fullPage: true });
-report.screenshots.push('mobile-menu.png', 'mobile-first-viewport.png', 'mobile-full-page.png');
+report.screenshots.push('mobile-first-viewport.png', 'mobile-menu.png', 'mobile-full-page.png');
 
 await fs.writeFile(`${output}/qa-report.json`, JSON.stringify(report, null, 2));
 await browser.close();
