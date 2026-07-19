@@ -7,7 +7,10 @@ function loadVenues(){
  const encoded=[0,1,2,3].map(n=>fs.readFileSync(path.join(dir,`padelsport.gz.b64.${String(n).padStart(2,'0')}`),'utf8').trim()).join('');
  const html=zlib.gunzipSync(Buffer.from(encoded,'base64')).toString('utf8');
  const marker='const NATIONAL_POINTS = ',start=html.indexOf(marker),from=start+marker.length,close=html.indexOf('];',from);
- return JSON.parse(html.slice(from,close+1).trim().replace(/\"/g,'"').replace(/\\/g,'\')).filter(row=>row.category==='padel');
+ const raw=html.slice(from,close+1).trim();
+ const escapedQuote=new RegExp(String.fromCharCode(92,34),'g');
+ const escapedSlash=new RegExp(String.fromCharCode(92,92),'g');
+ return JSON.parse(raw.replace(escapedQuote,'"').replace(escapedSlash,String.fromCharCode(92))).filter(row=>row.category==='padel');
 }
 function normalize(value){return String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\b(padel|club|court|arena|sports?|sport centre|sport center)\b/g,' ').replace(/[^a-z0-9]+/g,' ').trim()}
 function run(root,sandbox,file){const code=fs.readFileSync(path.join(root,file),'utf8');new vm.Script(code,{filename:file}).runInContext(sandbox);return code}
