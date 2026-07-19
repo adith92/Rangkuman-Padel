@@ -7,7 +7,7 @@ function loadVenues(){
  const encoded=[0,1,2,3].map(n=>fs.readFileSync(path.join(dir,`padelsport.gz.b64.${String(n).padStart(2,'0')}`),'utf8').trim()).join('');
  const html=zlib.gunzipSync(Buffer.from(encoded,'base64')).toString('utf8');
  const marker='const NATIONAL_POINTS = ',start=html.indexOf(marker),from=start+marker.length,close=html.indexOf('];',from);
- return JSON.parse(html.slice(from,close+1).trim().replace(/\\"/g,'"').replace(/\\\\/g,'\\')).filter(row=>row.category==='padel');
+ return JSON.parse(html.slice(from,close+1).trim().replace(/\"/g,'"').replace(/\\/g,'\')).filter(row=>row.category==='padel');
 }
 function normalize(value){return String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\b(padel|club|court|arena|sports?|sport centre|sport center)\b/g,' ').replace(/[^a-z0-9]+/g,' ').trim()}
 function run(root,sandbox,file){const code=fs.readFileSync(path.join(root,file),'utf8');new vm.Script(code,{filename:file}).runInContext(sandbox);return code}
@@ -22,6 +22,9 @@ module.exports=(req,res)=>{
   new vm.Script(uiCode,{filename:'venue-court-v10.js'});new vm.Script(qualityCode,{filename:'venue-court-quality-v12.js'});
   const css=fs.readFileSync(path.join(root,'mobile-redesign-v10.css'),'utf8');
   const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const legacyPath=path.join(root,'legacy.html');
+  const legacy=fs.existsSync(legacyPath)?fs.readFileSync(legacyPath,'utf8'):'';
+  const appShell=`${index}\n${legacy}`;
   const base=loadVenues(),research=Array.isArray(sandbox.window.PBPI_COURT_RESEARCH)?sandbox.window.PBPI_COURT_RESEARCH:[],data=sandbox.window.VERIFIED_VENUE_COURTS||{};
   const baseNames=base.map(v=>v.name),extraNames=research.filter(row=>!row.is_existing_venue&&row.duplicate_status!=='confirmed_duplicate').map(row=>row.display_name||row.canonical_name).filter(Boolean),names=[...new Set([...baseNames,...extraNames])],keys=Object.keys(data);
   const missing=names.filter(name=>!Object.prototype.hasOwnProperty.call(data,name)),orphan=keys.filter(name=>!names.includes(name));
@@ -46,7 +49,7 @@ module.exports=(req,res)=>{
   if(invalid.length||zeroTotals.length)errors.push('invalid or zero court totals');
   if(verifiedWithoutSource.length||acceptedWithoutSource.length)errors.push('accepted records without source URL');
   if(!css.includes('@media(max-width:760px)'))errors.push('mobile breakpoint missing');
-  for(const asset of ['venue-quality-v12.css','venue-court-quality-v12.js','venue-courts-research-merge.js'])if(!index.includes(asset))errors.push(`asset not loaded: ${asset}`);
+  for(const asset of ['venue-quality-v12.css','venue-court-quality-v12.js','venue-courts-research-merge.js'])if(!appShell.includes(asset))errors.push(`asset not loaded: ${asset}`);
   res.setHeader('Cache-Control','no-store');
   res.status(errors.length?422:200).json({
    ok:errors.length===0,errors,
