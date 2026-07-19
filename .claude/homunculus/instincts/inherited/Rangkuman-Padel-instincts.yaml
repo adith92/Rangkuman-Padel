@@ -1,0 +1,407 @@
+# Instincts generated from https://github.com/adith92/Rangkuman-Padel
+# Generated: 2026-07-19T16:08:56.146Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: Rangkuman-Padel-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: https://github.com/adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Commit Conventional
+
+## Action
+
+Use conventional commit format with prefixes: style, feat
+
+## Evidence
+
+- 7 commits analyzed
+- Detected conventional commit pattern
+- Examples: style: add redesign v15 core and hero, feat: add redesign v15 interactions
+
+---
+id: Rangkuman-Padel-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Commit Length
+
+## Action
+
+Keep commit messages concise (~43 characters)
+
+## Evidence
+
+- Average commit message length: 43 chars
+- Based on 7 commits
+
+---
+id: Rangkuman-Padel-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Naming Files
+
+## Action
+
+Use kebab-case naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: kebab-case
+
+---
+id: Rangkuman-Padel-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: Rangkuman-Padel-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: Rangkuman-Padel-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: Rangkuman-Padel-workflow-feature-development
+trigger: "when implementing a new feature"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Workflow Feature Development
+
+## Action
+
+Follow the feature-development workflow:
+1. Add feature implementation
+2. Add tests for feature
+3. Update documentation
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~30x per month
+- Files: 
+
+---
+id: Rangkuman-Padel-workflow-add-redesign-v15-style-section
+trigger: "when doing add redesign v15 style section"
+confidence: 0.7
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Workflow Add Redesign V15 Style Section
+
+## Action
+
+Follow the add-redesign-v15-style-section workflow:
+1. Create a new CSS file named 'redesign-v15-X.css' where X is a section number.
+2. Implement styles for the targeted section (e.g., core, hero, executive, venue, operations, responsive).
+3. Commit the new CSS file with a message following the pattern: 'style: add redesign v15 <section description>'.
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~4x per month
+- Files: redesign-v15-1.css, redesign-v15-2.css, redesign-v15-3.css
+
+---
+id: rangkuman-padel-instinct-file-naming
+trigger: "When creating a new file"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Instinct File Naming
+
+## Action
+
+Name the file using kebab-case (e.g., 'my-component.js')
+
+## Evidence
+
+- Naming conventions specified in analysis
+- Files like 'redesign-v15-1.css'
+
+---
+id: rangkuman-padel-instinct-function-naming
+trigger: "When defining a new function"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Instinct Function Naming
+
+## Action
+
+Name the function using camelCase (e.g., 'getUserData')
+
+## Evidence
+
+- Naming conventions specified in analysis
+
+---
+id: rangkuman-padel-instinct-class-naming
+trigger: "When defining a new class"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Instinct Class Naming
+
+## Action
+
+Name the class using PascalCase (e.g., 'UserProfile')
+
+## Evidence
+
+- Naming conventions specified in analysis
+
+---
+id: rangkuman-padel-instinct-constant-naming
+trigger: "When defining a constant"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Instinct Constant Naming
+
+## Action
+
+Name the constant using SCREAMING_SNAKE_CASE (e.g., 'MAX_USERS')
+
+## Evidence
+
+- Naming conventions specified in analysis
+
+---
+id: rangkuman-padel-instinct-import-style
+trigger: "When importing modules"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Instinct Import Style
+
+## Action
+
+Use relative import paths (e.g., './utils/helper.js')
+
+## Evidence
+
+- Import style specified as 'relative' in analysis
+
+---
+id: rangkuman-padel-instinct-export-style
+trigger: "When exporting modules or functions"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Instinct Export Style
+
+## Action
+
+Use named exports (e.g., 'export { myFunction }')
+
+## Evidence
+
+- Export style specified as 'named' in analysis
+
+---
+id: rangkuman-padel-instinct-test-location
+trigger: "When adding tests for a feature"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Instinct Test Location
+
+## Action
+
+Place test files in a separate directory from source code
+
+## Evidence
+
+- Architecture specifies 'testLocation': 'separate'
+
+---
+id: rangkuman-padel-instinct-test-after-feature
+trigger: "When implementing a new feature"
+confidence: 0.7
+domain: testing
+source: repo-analysis
+source_repo: adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Instinct Test After Feature
+
+## Action
+
+Add corresponding tests after feature implementation
+
+## Evidence
+
+- Workflows show 'Add tests for feature' after implementation
+
+---
+id: rangkuman-padel-instinct-git-commit-format
+trigger: "When making a commit"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Instinct Git Commit Format
+
+## Action
+
+Format the commit message as '<type>: <description>', using prefixes like 'style' or 'feat'
+
+## Evidence
+
+- Commits use 'style:' and 'feat:' prefixes
+- Conventional commit pattern in analysis
+
+---
+id: rangkuman-padel-instinct-git-commit-length
+trigger: "When writing a commit message"
+confidence: 0.7
+domain: git
+source: repo-analysis
+source_repo: adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Instinct Git Commit Length
+
+## Action
+
+Keep the commit message concise, around 43 characters on average
+
+## Evidence
+
+- Average commit length is 43 characters
+
+---
+id: rangkuman-padel-instinct-add-redesign-v15-style-section
+trigger: "When implementing or updating a visual section for the v15 redesign"
+confidence: 0.95
+domain: workflow
+source: repo-analysis
+source_repo: adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Instinct Add Redesign V15 Style Section
+
+## Action
+
+Create a new CSS file named 'redesign-v15-X.css', implement styles for the targeted section, and commit with 'style: add redesign v15 <section description>'
+
+## Evidence
+
+- Workflow 'add-redesign-v15-style-section' steps
+- Commits: 'style: add redesign v15 core and hero', etc.
+- Files: 'redesign-v15-1.css', 'redesign-v15-2.css', etc.
+
+---
+id: rangkuman-padel-instinct-feature-development-workflow
+trigger: "When developing a new feature"
+confidence: 0.8
+domain: workflow
+source: repo-analysis
+source_repo: adith92/Rangkuman-Padel
+---
+
+# Rangkuman Padel Instinct Feature Development Workflow
+
+## Action
+
+Follow the sequence: implement the feature, add tests, then update documentation
+
+## Evidence
+
+- Workflow 'feature-development' commitSequence: 'Add feature implementation', 'Add tests for feature', 'Update documentation'
+
