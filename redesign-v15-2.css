@@ -1,0 +1,39 @@
+.section{padding:112px 0}
+.section-shell{width:var(--shell);margin:auto}
+.section-heading{margin-bottom:42px}
+.split-heading{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.7fr);gap:70px;align-items:end}
+.section-index{margin:0 0 12px;color:var(--teal-dark);font-size:.7rem;font-weight:850;text-transform:uppercase;letter-spacing:.14em}
+.section-heading h2,.muri-copy h2,.source-shell h2{margin:0;font-size:clamp(2.3rem,4vw,4.15rem);line-height:1.05;letter-spacing:-.045em}
+.section-heading>p,.split-heading>p,.centered-heading>p,.muri-copy>p,.source-shell>div>p{margin:0;color:var(--slate);line-height:1.7;font-size:.94rem}
+.metric-ribbon{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:12px 0 50px}
+.metric-ribbon article{padding:28px 24px;border-right:1px solid var(--line)}
+.metric-ribbon article:last-child{border-right:0}
+.metric-ribbon strong{display:block;font-size:3.15rem;line-height:1;color:var(--navy-900);letter-spacing:-.055em}
+.metric-ribbon span{display:block;margin-top:8px;font-size:.78rem;font-weight:850}
+.metric-ribbon small{display:block;margin-top:5px;color:#7b8994;font-size:.62rem}
+.readiness-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:26px}
+.readiness-panel,.decision-panel{border-radius:var(--radius);background:#fff;border:1px solid var(--line);box-shadow:0 14px 45px rgba(12,32,48,.06)}
+.readiness-panel{padding:30px}
+.panel-title{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.panel-title span:first-child{font-size:.68rem;color:var(--slate);text-transform:uppercase;letter-spacing:.1em;font-weight:800}
+.panel-title h3{margin:5px 0 0;font-size:1.55rem}
+.status-chip{display:inline-flex;align-items:center;min-height:28px;padding:0 10px;border-radius:999px;font-size:.6rem;font-weight:850;white-space:nowrap}
+.status-good{background:#d9fbe9;color:#0a6f50}
+.status-review{background:#fff0cc;color:#8a5100}
+.status-info{background:#dceeff;color:#155a8a}
+.progress-list{display:grid;gap:24px;margin-top:25px}
+.progress-label{display:flex;justify-content:space-between;gap:20px;font-size:.78rem}
+.progress-label span{font-weight:750}.progress-label strong{font-size:.74rem}
+.progress-track{height:10px;border-radius:999px;background:#eaf0f3;margin:9px 0 6px;overflow:hidden}
+.progress-track span{display:block;width:var(--progress);height:100%;border-radius:inherit;background:var(--teal)}
+.progress-row.warning .progress-track span{background:var(--amber)}
+.progress-row.danger .progress-track span{background:var(--red)}
+.progress-row small{color:#7a8994;font-size:.62rem}
+.decision-panel{padding:30px;background:var(--navy-900);color:#fff;border-color:transparent;box-shadow:var(--shadow)}
+.panel-eyebrow{margin:0;color:var(--mint);font-size:.66rem;text-transform:uppercase;letter-spacing:.12em;font-weight:850}
+.decision-panel h3{font-size:2rem;line-height:1.12;margin:12px 0 24px}
+.decision-panel ol{list-style:none;margin:0;padding:0;display:grid;gap:18px}
+.decision-panel li{display:grid;grid-template-columns:90px 1fr;gap:16px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12)}
+.decision-panel li strong{color:var(--teal);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}
+.decision-panel li span{color:rgba(255,255,255,.7);font-size:.76rem;line-height:1.5}
+.decision-note{margin:25px 0 0;padding:15px;border-radius:14px;background:rgba(255,176,24,.12);color:#ffe2a1;font-size:.68rem;line-height:1.5}
